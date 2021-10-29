@@ -66,24 +66,29 @@ public class Fingerprint {
    * @return An array containing each neighbours' value.
    */
   public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
+	  
 	  assert (image != null); // special case that is not expected (the image is supposed to have been checked
                               // earlier)
-	  //TODO implement
+	  
+	  // initiate a list that will contain the values of the neighbours
 	  boolean[] neighbours = new boolean[8];
 	  
+	  // to know the number of rows and columns in the image
 	  int nbOfRows = image.length;
 	  int nbOfColumns = 0;
 	  if (image.length != 0) {
 		  nbOfColumns = image[0].length;
 	  }
+	  
+	  // creating a 2 dimension list which will contain the image, with added white borders on top, bottom, left and right of the image
       boolean[][] imageWithWhiteBorders = new boolean[nbOfRows + 2][nbOfColumns + 2];
       
-      
+      // add values to imageWithWhiteBorders while checking special case (coordinates out of the image)
       for (int y = 0; y < nbOfRows + 2; y++) {
-    	  for (int x = 0; x < nbOfColumns + 2; x++) {
+    	  for (int x = 0; x < nbOfColumns + 2; x++ ) {
     		  
     		  if (x < 0 || x > nbOfColumns + 1 || y < 0 || y > nbOfRows + 1) {
-    			  return null;
+    			  neighbours = null;
     		  }
     		  else {
     			  if (x == 0 || x == nbOfColumns + 1 || y == 0 || y == nbOfRows + 1) {
@@ -92,20 +97,21 @@ public class Fingerprint {
         		  if (x > 0 && x < nbOfColumns + 1 && y > 0 && y < nbOfRows + 1) {
         			  imageWithWhiteBorders[y][x] = image[y - 1][x - 1];
         		  }
+        		  
+        		  // find the values of the neighbours and save them to the list
+        		  
+        		  neighbours[0] = imageWithWhiteBorders[row][col + 1];
+        	      neighbours[1] = imageWithWhiteBorders[row][col + 2];
+        	      neighbours[2] = imageWithWhiteBorders[row + 1][col + 2];
+        	      neighbours[3] = imageWithWhiteBorders[row + 2][col + 2];
+        	      neighbours[4] = imageWithWhiteBorders[row + 2][col + 1];
+        	      neighbours[5] = imageWithWhiteBorders[row + 2][col];
+        	      neighbours[6] = imageWithWhiteBorders[row + 1][col];
+        	      neighbours[7] = imageWithWhiteBorders[row][col];
     		  }
     	  }
       }
-      
-      neighbours[0] = imageWithWhiteBorders[row][col + 1];
-      neighbours[1] = imageWithWhiteBorders[row][col + 2];
-      neighbours[2] = imageWithWhiteBorders[row + 1][col + 2];
-      neighbours[3] = imageWithWhiteBorders[row + 2][col + 2];
-      neighbours[4] = imageWithWhiteBorders[row + 2][col + 1];
-      neighbours[5] = imageWithWhiteBorders[row + 2][col];
-      neighbours[6] = imageWithWhiteBorders[row + 1][col];
-      neighbours[7] = imageWithWhiteBorders[row][col];
-      
-	  return neighbours;
+      return neighbours;
   }
 
   /**
