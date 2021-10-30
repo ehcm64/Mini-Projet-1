@@ -37,6 +37,22 @@ public class Fingerprint {
    */
   public static final int MATCH_ANGLE_OFFSET = 2;
 
+  // this method tests if a pixel's coordinates are contained within an image 
+  public static boolean pixelTest(boolean[][] image, int row, int col) {
+	  
+	  assert (image != null);
+	  int nbOfRows = image.length;
+	  int nbOfCols = image[0].length;
+	  
+	  if (row < 0 || row > nbOfRows - 1 || col < 0 || col > nbOfCols - 1) {
+		  return false;
+	  }
+	  else {
+		  return true;
+	  }
+	  
+  }
+  
   /**
    * Returns an array containing the value of the 8 neighbours of the pixel at
    * coordinates <code>(row, col)</code>.
@@ -65,24 +81,6 @@ public class Fingerprint {
    *              <code>image[row].length</code>(excluded).
    * @return An array containing each neighbours' value.
    */
-  
-  
-  // this method tests if a pixel's coordinates are contained within an image 
-  public static boolean pixelTest(boolean[][] image, int row, int col) {
-	  
-	  assert (image != null);
-	  int nbOfRows = image.length;
-	  int nbOfCols = image[0].length;
-	  
-	  if (row < 0 || row > nbOfRows - 1 || col < 0 || col > nbOfCols - 1) {
-		  return false;
-	  }
-	  else {
-		  return true;
-	  }
-	  
-  }
-  
   public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
 	  
 	  assert (image != null); // special case that is not expected (the image is supposed to have been checked earlier)
@@ -125,7 +123,7 @@ public class Fingerprint {
 	  int blackNeighbourscount = 0;
 	  for (int i = 0; i < neighbours.length; i++) {
 		  if (neighbours[i] == true) {
-			  blackNeighbourscount +=1 ;
+			  blackNeighbourscount++;
 		  }
 	  }
 	  return blackNeighbourscount;
@@ -144,12 +142,13 @@ public class Fingerprint {
   public static int transitions(boolean[] neighbours) {
 	  int nbTransitions = 0;
 
-	  for(int i=0; i < neighbours.length; i++) {
-		  
-		  if ((neighbours[i] == true) && (neighbours[i+1] == false)) { //Transition if the pixel is white and if the next one is black
-			  nbTransitions += 1;
+	  for (int i = 0; i < neighbours.length - 1; i++) {
+		  if (neighbours[i] == false && neighbours[i+1] == true) { //Transition if the pixel is white and if the next one is black
+			  nbTransitions++;
 		  }
-		  
+	  }
+	  if (neighbours[7] == false && neighbours[0] == true) {
+		  nbTransitions++;
 	  }
 	  return nbTransitions;
 	  
@@ -169,17 +168,12 @@ public class Fingerprint {
 		  }
 		  
 		  for (int row = 0; row < image1.length; row++) {
-			  for( int col = 0; col < image1[0].length; col++) {
+			  for (int col = 0; col < image1[0].length; col++) {
 				  if (image1[row][col] != image2[row][col]) {
 					  return false;
-				  }
-					  
+				  }  
 			  }
 		  }
-	  
-	  
-	  
-	  
 	  return true;
   }
 
