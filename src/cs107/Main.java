@@ -22,6 +22,8 @@ public class Main {
     testGetNeighbours();
     testBlackNeighbours();
     testTransitions();
+    testIdentical1();
+    testIdentical2();
     //testConnectedPixels1();
     //testConnectedPixels2();
     //testConnectedPixels3();
@@ -106,6 +108,20 @@ public class Main {
 	  boolean[] neighbours = {false, true, true, false, false, false, true, false};
 	  System.out.println("Expected : 2");
 	  System.out.println("Computed : " + Fingerprint.transitions(neighbours));
+  }
+  
+  public static void testIdentical1() {
+	  boolean[][] image1 = {{true, false, false}, {false, false, true}, {false, true, true}};
+	  boolean[][] image2 = {{true, false, false}, {false, false, true}, {false, true, true}};
+	  System.out.println("Expected : true");
+	  System.out.println("Computed : " + Fingerprint.identical(image1, image2));
+  }
+  
+  public static void testIdentical2() {
+	  boolean[][] image1 = {{true, false, false}, {false, false, true}, {false, true, true}};
+	  boolean[][] image2 = {{true, false, true}, {false, true, true}, {false, false, true}};
+	  System.out.println("Expected : false");
+	  System.out.println("Computed : " + Fingerprint.identical(image1, image2));
   }
 
   /**
