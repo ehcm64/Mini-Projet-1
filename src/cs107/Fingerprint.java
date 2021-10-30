@@ -120,6 +120,7 @@ public class Fingerprint {
    * @return the number of black neighbours.
    */
   public static int blackNeighbours(boolean[] neighbours) {
+
 	  int blackNeighbourscount = 0;
 	  for (int i = 0; i < neighbours.length; i++) {
 		  if (neighbours[i] == true) {
@@ -140,6 +141,7 @@ public class Fingerprint {
    * @return the number of white to black transitions.
    */
   public static int transitions(boolean[] neighbours) {
+
 	  int nbTransitions = 0;
 
 	  for (int i = 0; i < neighbours.length - 1; i++) {
@@ -163,6 +165,7 @@ public class Fingerprint {
    *         otherwise.
    */
   public static boolean identical(boolean[][] image1, boolean[][] image2) {
+    
 	   if ((image1.length != image2.length) || (image1[0].length != image2[0].length)) {
 			  return false;
 		  }
