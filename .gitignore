@@ -1,6 +1,10 @@
 # Compiled class file
-*.class
-
+Fingerprint.class
+Helper.class
+Helper$1.class
+Helper$2.class
+Main.class
+SignatureChecks.class
 # Log file
 *.log
 
