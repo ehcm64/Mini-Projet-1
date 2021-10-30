@@ -122,8 +122,14 @@ public class Fingerprint {
    * @return the number of black neighbours.
    */
   public static int blackNeighbours(boolean[] neighbours) {
-	  //TODO implement
-	  return 0;
+	  int blackNeighbourscount = 0;
+	  for (int i = 0; i < neighbours.length; i++) {
+		  if (neighbours[i] == true) {
+			  blackNeighbourscount +=1 ;
+		  }
+	  }
+	  return blackNeighbourscount;
+	 
   }
   
   /**
@@ -136,8 +142,17 @@ public class Fingerprint {
    * @return the number of white to black transitions.
    */
   public static int transitions(boolean[] neighbours) {
-	  //TODO implement
-	  return 0;
+	  int nbTransitions = 0;
+
+	  for(int i=0; i < neighbours.length; i++) {
+		  
+		  if ((neighbours[i] == true) && (neighbours[i+1] == false)) { //Transition if the pixel is white and if the next one is black
+			  nbTransitions += 1;
+		  }
+		  
+	  }
+	  return nbTransitions;
+	  
   }
 
   /**
@@ -149,8 +164,23 @@ public class Fingerprint {
    *         otherwise.
    */
   public static boolean identical(boolean[][] image1, boolean[][] image2) {
-	  //TODO implement
-	  return false;
+	   if ((image1.length != image2.length) || (image1[0].length != image2[0].length)) {
+			  return false;
+		  }
+		  
+		  for (int row = 0; row < image1.length; row++) {
+			  for( int col = 0; col < image1[0].length; col++) {
+				  if (image1[row][col] != image2[row][col]) {
+					  return false;
+				  }
+					  
+			  }
+		  }
+	  
+	  
+	  
+	  
+	  return true;
   }
 
   /**
