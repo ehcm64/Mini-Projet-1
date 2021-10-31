@@ -87,16 +87,19 @@ public class Fingerprint {
 
 	  // initiate a list that will contain the values of the neighbours
 	  boolean[] neighbours = new boolean[8];
+    // lists of coordinates of the pixel's neighbours relative to the pixel
 	  int[] neighbourRowDiff = {-1, -1, 0, 1, 1, 1, 0, -1};
 	  int[] neighbourColDiff = {0, 1, 1, 1, 0, -1, -1, -1};
 	  
+    // testing if the pixel we are analysing is in the image
 	  if (pixelTest(image, row, col)) {
+      // assessing the position and value of each neighbour (from 0 to 7)
 		  for (int i = 0; i < neighbours.length; i++) {
-			  int y = row + neighbourRowDiff[i];
-			  int x = col + neighbourColDiff[i];
+			  int neighbourRow = row + neighbourRowDiff[i];
+			  int neighbourCol = col + neighbourColDiff[i];
 			  
-			  if (pixelTest(image, y, x) == true) {
-				  neighbours[i] = true;
+			  if (pixelTest(image, neighbourRow, neighbourCol) == true) {
+				  neighbours[i] = image[neighbourRow][neighbourCol];
 			  }
 			  else {
 				  neighbours[i] = false;
@@ -106,7 +109,6 @@ public class Fingerprint {
 	  else {
 		  neighbours = null;
 	  }
-	  
 	  return neighbours;
   }
 
@@ -200,7 +202,11 @@ public class Fingerprint {
    *         applying the thinning algorithm.
    */
   public static boolean[][] thin(boolean[][] image) {
-	  //TODO implement
+	  
+    int nbOfRows = image.length;
+    int nbOfCols = image[0].length;
+    boolean pixelChanged = true;
+  
 	  return null;
   }
 
