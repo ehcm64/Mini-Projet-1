@@ -182,6 +182,20 @@ public class Fingerprint {
 	  return true;
   }
 
+  public static boolean[][] copyImage(boolean[][] copiedImage) {
+
+    int nbOfRows = copiedImage.length;
+    int nbOfCols = copiedImage[0].length;
+    boolean[][] pastedImage = new boolean[nbOfRows][nbOfCols];
+
+    for (int row = 0; row < nbOfRows; row++) {
+      for (int col = 0; col < nbOfCols; col++) {
+        pastedImage[row][col] = copiedImage[row][col];
+      }
+    }
+    return pastedImage;
+  }
+
   /**
    * Internal method used by {@link #thin(boolean[][])}.
    *
@@ -190,8 +204,51 @@ public class Fingerprint {
    * @return A new array containing each pixel's value after the step.
    */
   public static boolean[][] thinningStep(boolean[][] image, int step) {
-	  //TODO implement
-	  return null;
+	  
+    int nbOfRows = image.length;
+    int nbOfCols = image[0].length;
+
+    boolean[][] newImage = copyImage(image);
+    
+    for (int row = 0; row < nbOfRows; row++) {
+      for (int col = 0; col < nbOfCols; col++) {
+
+        boolean condition1 = image[row][col];
+        boolean condition2 = true;
+        boolean[] neighbours = getNeighbours(image, row, col);
+
+        if (neighbours == null) {
+          condition2 = false;
+        }
+
+        boolean p0 = neighbours[0];
+        boolean p2 = neighbours[2];
+        boolean p4 = neighbours[4];
+        boolean p6 = neighbours[6];
+
+        boolean condition3 = blackNeighbours(neighbours) >= 2 && blackNeighbours(neighbours) <= 6;
+        boolean condition4 = transitions(neighbours) == 1;
+        boolean condition5 = false;
+        boolean condition6 = false;
+
+        if (step == 0) {
+
+          condition5 = p0 == false || p2 == false || p4 == false;
+          condition6 = p2 == false || p4 == false || p6 == false;
+        }
+        else if (step == 1) {
+
+          condition5 = p0 == false || p2 == false || p6 == false;
+          condition6 = p0 == false || p4 == false || p6 == false;
+        }
+
+        if (condition1 && condition2 && condition3 && condition4 && condition5 && condition6) {
+          newImage[row][col] = false;
+        }
+
+      }
+    }
+	  return newImage;
   }
   
   /**
@@ -203,11 +260,29 @@ public class Fingerprint {
    */
   public static boolean[][] thin(boolean[][] image) {
 	  
-    int nbOfRows = image.length;
-    int nbOfCols = image[0].length;
     boolean pixelChanged = true;
-  
-	  return null;
+    boolean[][] tempImage0 = copyImage(image); 
+    boolean[][] tempImage1 = null;
+    boolean[][] tempImage2 = null;
+
+    while (pixelChanged) {
+
+      tempImage1 = thinningStep(tempImage0, 0);
+
+      if (identical(tempImage0, tempImage1)) {
+        pixelChanged = false;
+      }
+
+      tempImage2 = thinningStep(tempImage1, 1);
+
+      if (identical(tempImage0, tempImage2)) {
+        pixelChanged = false;
+      }
+      else {
+        tempImage0 = copyImage(tempImage2);
+      }
+    }
+	  return tempImage2;
   }
 
   /**
