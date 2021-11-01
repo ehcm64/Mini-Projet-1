@@ -214,7 +214,7 @@ public class Fingerprint {
         boolean condition1 = image[row][col];
         boolean condition2 = true;
         boolean[] neighbours = getNeighbours(image, row, col);
-
+// github test 
         if (neighbours == null) {
           condition2 = false;
         }
