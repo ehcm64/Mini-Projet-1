@@ -100,13 +100,11 @@ public class Fingerprint {
 			  
 			  if (pixelTest(image, neighbourRow, neighbourCol) == true) {
 				  neighbours[i] = image[neighbourRow][neighbourCol];
-			  }
-			  else {
+			  } else {
 				  neighbours[i] = false;
 			  }
 		  }
-	  }
-	  else {
+	  } else {
 		  neighbours = null;
 	  }
 	  return neighbours;
@@ -233,13 +231,13 @@ public class Fingerprint {
 
         if (step == 0) {
 
-          condition5 = p0 == false || p2 == false || p4 == false;
-          condition6 = p2 == false || p4 == false || p6 == false;
+          condition5 = !p0 || !p2 || !p4;
+          condition6 = !p2 || !p4 || !p6;
         }
         else if (step == 1) {
 
-          condition5 = p0 == false || p2 == false || p6 == false;
-          condition6 = p0 == false || p4 == false || p6 == false;
+          condition5 = !p0 || !p2 || !p6;
+          condition6 = !p0 || !p4 || !p6;
         }
 
         if (condition1 && condition2 && condition3 && condition4 && condition5 && condition6) {
