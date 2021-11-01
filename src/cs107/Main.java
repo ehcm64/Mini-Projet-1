@@ -17,26 +17,28 @@ public class Main {
     //---------------------------
     // Tests functions separately
     //---------------------------
-	System.out.println("Uncomment the function calls in Main.main to test your implementation.");
-	System.out.println("The provided tests are not complete. You have to write your own tests.");
-    testGetNeighbours();
-    testBlackNeighbours();
-    testTransitions();
-    testIdentical1();
-    testIdentical2();
-    //testConnectedPixels1();
-    //testConnectedPixels2();
-    //testConnectedPixels3();
+	//System.out.println("Uncomment the function calls in Main.main to test your implementation.");
+	//System.out.println("The provided tests are not complete. You have to write your own tests.");
+    //testGetNeighbours();
+    //testBlackNeighbours();
+    //testTransitions();
+    //testIdentical1();
+    //testIdentical2();
+    testConnectedPixels1();
+    testConnectedPixels2();
+    testConnectedPixels3();
     //testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
     //testThin();
     //testWithSkeleton();
     
-    testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
-    testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
-    testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
-    testSkeleton();
+    //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
+    //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
+    //testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
+    //testSkeleton("1_1", "skeleton_1_1");
+    //testSkeleton("1_2", "skeleton_1_2");
+    //testSkeleton("2_1", "skeleton_2_1");
     //testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
     //testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
     //testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
@@ -195,9 +197,9 @@ public class Main {
       System.out.println("OK");
     } else {
       System.out.println("ERROR");
-      System.out.print("Expected: ");
+      System.out.println("Expected: ");
       printArray(expected);
-      System.out.print("Computed: ");
+      System.out.println("Computed: ");
       printArray(connectedPixels);
     }
   }
@@ -291,6 +293,19 @@ public class Main {
     int[][] colorImageSkeleton1 = Helper.fromBinary(skeleton1);
     Helper.drawMinutia(colorImageSkeleton1, minutia1);
     Helper.writeARGB("minutiae_" + name + ".png", colorImageSkeleton1);
+  }
+
+  public static void testSkeleton(String input, String output) {
+
+    boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + input + ".png");
+	  boolean[][] skeleton1 = Fingerprint.thin(image1);
+    boolean[][] expected = Helper.readBinary("resources/test_outputs/" + output + ".png");
+
+    if (Fingerprint.identical(expected, skeleton1)) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERREUR");
+    }
   }
 
   /**

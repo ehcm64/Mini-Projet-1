@@ -1,7 +1,7 @@
 package cs107;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.ArrayList;
+//import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -297,12 +297,14 @@ public class Fingerprint {
 	  int squareLength = (2 * distance) + 1;
 	  boolean[][] square = new boolean[squareLength][squareLength];
 	  boolean[][] newImage = new boolean[image.length][image[0].length];
+    boolean[][] tempImage = new boolean[image.length][image[0].length];
 	  
 	  boolean pixelExist = true;
 	  
 	  if(image[row][col] == false) {
 		 return null;
     } else {
+      tempImage[row][col] = true;
       newImage[row][col] = true;
       
       for (int rowGap = 0; rowGap < squareLength; rowGap++) {
@@ -315,6 +317,34 @@ public class Fingerprint {
           }
         }
       }
+
+    while(pixelExist){
+      
+      for(int squareRow = 0; squareRow < squareLength; squareRow++){
+        for(int squareCol = 0; squareCol < squareLength; squareCol ++){
+          if(pixelTest(image, squareRow, squareCol) && (image[squareRow][squareCol])){
+            boolean[] tempNeighbours = getNeighbours(newImage, squareRow, squareCol);
+            for(int tempNeighbourslength = 0; tempNeighbourslength < tempNeighbours.length; tempNeighbourslength++){
+              if(tempNeighbours[tempNeighbourslength]){
+                newImage[squareRow][squareCol] = true;
+              }
+            }
+            
+
+          }
+          
+        }
+      }
+      if(identical(newImage, tempImage)){
+        pixelExist = false;
+      }else{
+        for(int newImageRow = 0; newImageRow < newImage.length; newImageRow++){
+          for(int newImageCol = 0; newImageCol < newImage[newImageRow].length; newImageCol++){
+            tempImage[newImageRow][newImageCol] = newImage[newImageRow][newImageCol];
+          }
+        }
+      }
+    }
       //for (int rowLength = 0; rowLength <= squareLength; rowLength++) {
         //for (int colLength = 0; colLength <= squareLength; colLength++) {
           //if (pixelTest(image, rowLength, colLength) && image[row][col]) {
