@@ -297,8 +297,84 @@ public class Fingerprint {
    *         <code>(row, col)</code>.
    */
   public static boolean[][] connectedPixels(boolean[][] image, int row, int col, int distance) {
-	  //TODO implement
-	  return null;
+	  if(distance < 0) {
+		  return null;
+	  }
+	  
+	  int distance2 = 2*distance+1;
+	  boolean[][] newImage = new boolean[distance2][distance2];
+	  boolean[][] tableConnectedPix = new boolean[image.length][image[0].length];
+	  
+	  boolean pixelExist = true;
+	  
+	  if(image[row][col] == false) {
+		 return null;
+		 
+	 }else {
+		 
+		 
+		 tableConnectedPix[row][col] = true;
+		 
+		 
+		 for (int newRow = 0; newRow < image.length; newRow++) {
+			 for(int newCol = 0; newCol < image[newRow].length; newCol++) {
+				 newImage[distance2/2  + newRow][distance2 /2  + newCol] = image[newRow][newCol];
+			 }
+		 }
+		 
+		 
+			 
+			 
+			 for(int rowlength = 0; rowlength <= distance2; rowlength++) {
+				 for(int collength = 0; collength <= distance2; collength++) {
+					
+					 if(pixelTest(image, rowlength, collength) == false || image[row][col] == false) {
+						 
+						 continue;
+						 
+					 }
+					 
+					 else {
+						 
+						 boolean[] tempNeighbours = getNeighbours(tableConnectedPix, rowlength,collength);
+						 
+						 for(int tempSize = 0; tempSize < tempNeighbours.length; tempSize++) {
+							 System.out.print(tempNeighbours[tempSize]+ " ");
+							 if(tempNeighbours[tempSize]) {
+								 
+								 tableConnectedPix[rowlength][collength] = true;
+								 
+							 
+						 }
+						 
+						 
+					 }
+						 System.out.println("");
+					 
+				 }
+				
+			 
+			 
+		 }
+		}
+		 
+		 
+		 
+	 }
+	
+	for(int ligne = 0; ligne < distance2; ligne++) {
+		 for(int colonne = 0; colonne< distance2; colonne ++) {
+			 System.out.print(newImage[ligne][colonne]+ " ");
+		 }
+		 System.out.println("");
+	}  //for(int ligne = 0; ligne < distance2; ligne++) {
+			 //for(int colonne = 0; colonne< distance2; colonne ++) {
+				 //System.out.print(tableConnectedPix[ligne][colonne]+ " ");
+			 //}
+			 //System.out.println("");
+	  //}
+	  return tableConnectedPix;
+  
   }
 
   /**
