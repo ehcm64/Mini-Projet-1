@@ -315,6 +315,32 @@ public class Fingerprint {
           }
         }
       }
+	while(pixelExist){
+      
+      for(int squareRow = 0; squareRow < squareLength; squareRow++){
+        for(int squareCol = 0; squareCol < squareLength; squareCol ++){
+          if(pixelTest(image, squareRow, squareCol) && (image[squareRow][squareCol])){
+            boolean[] tempNeighbours = getNeighbours(newImage, squareRow, squareCol);
+            for(int tempNeighbourslength = 0; tempNeighbourslength < tempNeighbours.length; tempNeighbourslength++){
+              if(tempNeighbours[tempNeighbourslength]){
+                newImage[squareRow][squareCol] = true;
+              }
+            }
+            
+
+          }
+          
+        }
+      }
+      if(identical(newImage, tempImage)){
+        pixelExist = false;
+      }else{
+        for(int newImageRow = 0; newImageRow < newImage.length; newImageRow++){
+          for(int newImageCol = 0; newImageCol < newImage[newImageRow].length; newImageCol++){
+            tempImage[newImageRow][newImageCol] = newImage[newImageRow][newImageCol];
+          }
+        }
+      }	  
       //for (int rowLength = 0; rowLength <= squareLength; rowLength++) {
         //for (int colLength = 0; colLength <= squareLength; colLength++) {
           //if (pixelTest(image, rowLength, colLength) && image[row][col]) {
@@ -330,6 +356,7 @@ public class Fingerprint {
         //}
       //}
     }
+	  
       return newImage;
     } 
 
