@@ -266,18 +266,11 @@ public class Fingerprint {
     while (pixelChanged) {
 
       tempImage1 = thinningStep(tempImage0, 0);
-
-      if (identical(tempImage0, tempImage1)) {
-        pixelChanged = false;
-        break;
-      }
-
       tempImage2 = thinningStep(tempImage1, 1);
 
       if (identical(tempImage0, tempImage2)) {
         pixelChanged = false;
-      }
-      else {
+      } else {
         tempImage0 = copyImage(tempImage2);
       }
     }
@@ -312,37 +305,33 @@ public class Fingerprint {
     } else {
       newImage[row][col] = true;
       
-      for (int newRow = 0; newRow < image.length; newRow++) {
-        for (int newCol = 0; newCol < image[newRow].length; newCol++) {
-          square[squareLength / 2  + newRow][squareLength / 2  + newCol] = image[newRow][newCol];
-        }
-      }
+      for (int rowGap = 0; rowGap < squareLength; rowGap++) {
+        for (int colGap = 0; colGap < squareLength; colGap++) {
+          int squarePixelRow = row - (squareLength / 2) + rowGap;
+          int squarePixelCol = col - (squareLength / 2) + colGap;
 
-      for (int rowLength = 0; rowLength <= squareLength; rowLength++) {
-        for (int colLength = 0; colLength <= squareLength; colLength++) {
-          if (pixelTest(image, rowLength, colLength) && image[row][col]) {
-
-            boolean[] tempNeighbours = getNeighbours(newImage, rowLength,colLength);
-            for (int tempSize = 0; tempSize < tempNeighbours.length; tempSize++) {
-    
-              System.out.print(tempNeighbours[tempSize]+ " ");
-              if(tempNeighbours[tempSize]) {
-                newImage[rowLength][colLength] = true;
-              }
-            }
-            System.out.println();
+          if (pixelTest(image, squarePixelRow, squarePixelCol)) {
+            square[rowGap][colGap] = image[squarePixelRow][squarePixelCol];
           }
         }
       }
+      //for (int rowLength = 0; rowLength <= squareLength; rowLength++) {
+        //for (int colLength = 0; colLength <= squareLength; colLength++) {
+          //if (pixelTest(image, rowLength, colLength) && image[row][col]) {
+
+            //boolean[] tempNeighbours = getNeighbours(newImage, rowLength,colLength);
+            //for (int tempSize = 0; tempSize < tempNeighbours.length; tempSize++) {
+    
+              //if(tempNeighbours[tempSize]) {
+                //newImage[rowLength][colLength] = true;
+              //}
+            //}
+          //}
+        //}
+      //}
     }
-    for(int ligne = 0; ligne < squareLength; ligne++) {
-      for(int colonne = 0; colonne< squareLength; colonne ++) {
-        System.out.print(square[ligne][colonne]+ " ");
-      }
-      System.out.println();
-    }
-    return newImage;
-  }
+      return newImage;
+    } 
 
   /**
    * Computes the slope of a minutia using linear regression.
