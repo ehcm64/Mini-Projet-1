@@ -271,6 +271,7 @@ public class Fingerprint {
 
       if (identical(tempImage0, tempImage1)) {
         pixelChanged = false;
+        break;
       }
 
       tempImage2 = thinningStep(tempImage1, 1);
