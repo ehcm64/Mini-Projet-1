@@ -289,76 +289,45 @@ public class Fingerprint {
    *         <code>distance</code> and connected to the pixel at
    *         <code>(row, col)</code>.
    */
-  public static boolean[][] connectedPixels(boolean[][] image, int row, int col, int distance) {
+public static boolean[][] connectedPixels(boolean[][] image, int row, int col, int distance) {
     
     if(distance < 0) {
-		  return null;
+	return null;
 	  }
-	  int squareLength = (2 * distance) + 1;
-	  boolean[][] square = new boolean[squareLength][squareLength];
-	  boolean[][] newImage = new boolean[image.length][image[0].length];
+    boolean[][] newImage = new boolean[image.length][image[0].length];
+    newImage[row][col] = true;
+    boolean[][] tempImage = copyImage(newImage);
+    boolean pixelExist = true;
 	  
-	  boolean pixelExist = true;
-	  
-	  if(image[row][col] == false) {
-		 return null;
-    } else {
-      newImage[row][col] = true;
-      
-      for (int rowGap = 0; rowGap < squareLength; rowGap++) {
-        for (int colGap = 0; colGap < squareLength; colGap++) {
-          int squarePixelRow = row - (squareLength / 2) + rowGap;
-          int squarePixelCol = col - (squareLength / 2) + colGap;
+    if(image[row][col] == false) {
+   	return null;
 
-          if (pixelTest(image, squarePixelRow, squarePixelCol)) {
-            square[rowGap][colGap] = image[squarePixelRow][squarePixelCol];
-          }
-        }
-      }
-	while(pixelExist){
-      
-      for(int squareRow = 0; squareRow < squareLength; squareRow++){
-        for(int squareCol = 0; squareCol < squareLength; squareCol ++){
-          if(pixelTest(image, squareRow, squareCol) && (image[squareRow][squareCol])){
-            boolean[] tempNeighbours = getNeighbours(newImage, squareRow, squareCol);
-            for(int tempNeighbourslength = 0; tempNeighbourslength < tempNeighbours.length; tempNeighbourslength++){
-              if(tempNeighbours[tempNeighbourslength]){
-                newImage[squareRow][squareCol] = true;
-              }
-            }
-            
-
-          }
-          
-        }
-      }
-      if(identical(newImage, tempImage)){
-        pixelExist = false;
-      }else{
-        for(int newImageRow = 0; newImageRow < newImage.length; newImageRow++){
-          for(int newImageCol = 0; newImageCol < newImage[newImageRow].length; newImageCol++){
-            tempImage[newImageRow][newImageCol] = newImage[newImageRow][newImageCol];
-          }
-        }
-      }	  
-      //for (int rowLength = 0; rowLength <= squareLength; rowLength++) {
-        //for (int colLength = 0; colLength <= squareLength; colLength++) {
-          //if (pixelTest(image, rowLength, colLength) && image[row][col]) {
-
-            //boolean[] tempNeighbours = getNeighbours(newImage, rowLength,colLength);
-            //for (int tempSize = 0; tempSize < tempNeighbours.length; tempSize++) {
-    
-              //if(tempNeighbours[tempSize]) {
-                //newImage[rowLength][colLength] = true;
-              //}
-            //}
-          //}
-        //}
-      //}
-    }
-	  
-      return newImage;
     } 
+    else {
+      while(pixelExist){
+      
+        for(int rowGap = row - distance; rowGap <= row + distance; rowGap++){
+          for(int colGap = col - distance; colGap <= col + distance; colGap ++){
+
+            if(pixelTest(image, rowGap, colGap) && (image[rowGap][colGap])){
+              boolean[] tempNeighbours = getNeighbours(newImage, rowGap, colGap);
+            
+                if(blackNeighbours(tempNeighbours) > 0){
+                 newImage[rowGap][colGap] = true;
+                }
+            }
+          }
+        }
+        if(identical(newImage, tempImage)){
+          pixelExist = false;
+
+        }else{
+          tempImage = copyImage(newImage);
+        }
+      }
+    }
+    return newImage;
+}
 
   /**
    * Computes the slope of a minutia using linear regression.
