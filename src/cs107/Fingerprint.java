@@ -50,6 +50,18 @@ public class Fingerprint {
 	  }
     return pixelInImage;
   }
+
+  public static boolean returnPixel(boolean[][] image, int row, int col) {
+    assert (image != null);
+
+    boolean pixelValue = false;
+    if (!pixelTest(image, row, col)) {
+      pixelValue = false;
+    } else {
+      pixelValue = image[row][col];
+    }
+    return pixelValue;
+  }
   
   /**
    * Returns an array containing the value of the 8 neighbours of the pixel at
@@ -84,22 +96,14 @@ public class Fingerprint {
 	  // initiate a list that will contain the values of the neighbours
 	  boolean[] neighbours = new boolean[8];
     // lists of coordinates of the pixel's neighbours relative to the pixelfrom p0 to p7
-	  int[] neighbourRowDiff = {-1, -1, 0, 1, 1, 1, 0, -1};
-	  int[] neighbourColDiff = {0, 1, 1, 1, 0, -1, -1, -1};
+	  int[] neighbourRow = {row - 1, row - 1, row, row + 1, row + 1, row + 1, row, row - 1};
+	  int[] neighbourCol = {col, col + 1, col + 1, col + 1, col, col - 1, col - 1, col - 1};
     // checking if the pixel we are analysing is in the image
 	  if (!pixelTest(image, row, col)) {
       neighbours = null;
 	  } else {
       for (int i = 0; i < neighbours.length; i++) {
-        // assigning neighbour n* i's coordinates
-        int neighbourRow = row + neighbourRowDiff[i];
-        int neighbourCol = col + neighbourColDiff[i];
-        // checking if the neighbour n* i is in the image
-			  if (!pixelTest(image, neighbourRow, neighbourCol)) {
-				  neighbours[i] = false;
-			  } else {
-          neighbours[i] = image[neighbourRow][neighbourCol];
-			  }
+        neighbours[i] = returnPixel(image, neighbourRow[i], neighbourCol[i]);
 		  }	  
 	  }
 	  return neighbours;
@@ -156,18 +160,18 @@ public class Fingerprint {
    *         otherwise.
    */
   public static boolean identical(boolean[][] image1, boolean[][] image2) {
-    boolean identical = true;
+    boolean match = true;
 	   if ((image1.length != image2.length) || (image1[0].length != image2[0].length)) {
-			  identical = false;
+			  match = false;
 		  }
 		  for (int row = 0; row < image1.length; row++) {
 			  for (int col = 0; col < image1[0].length; col++) {
 				  if (image1[row][col] != image2[row][col]) {
-					  identical = false;
+					  match = false;
 				  }  
 			  }
 		  }
-	  return identical;
+	  return match;
   }
 
   public static boolean[][] copyImage(boolean[][] copiedImage) {
@@ -240,10 +244,11 @@ public class Fingerprint {
    *         applying the thinning algorithm.
    */
   public static boolean[][] thin(boolean[][] image) {
-    boolean pixelChange = true;
+    
     boolean[][] startImage = copyImage(image); 
     boolean[][] intermediaryImage = null;
     boolean[][] endImage = null;
+    boolean pixelChange = true;
 
     while (pixelChange) {
 
