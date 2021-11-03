@@ -39,18 +39,28 @@ public class Fingerprint {
 
   // this method tests if a pixel's coordinates are contained within an image 
   public static boolean pixelTest(boolean[][] image, int row, int col) {
-	  
 	  assert (image != null);
+
+    boolean pixelInImage = false;
 	  int nbOfRows = image.length;
 	  int nbOfCols = image[0].length;
 	  
-	  if (row < 0 || row > nbOfRows - 1 || col < 0 || col > nbOfCols - 1) {
-		  return false;
+	  if (row >= 0 && row <= nbOfRows - 1 && col >= 0 && col <= nbOfCols - 1) {
+		  pixelInImage = true;
 	  }
-	  else {
-		  return true;
-	  }
-	  
+    return pixelInImage;
+  }
+
+  public static boolean returnPixel(boolean[][] image, int row, int col) {
+    assert (image != null);
+
+    boolean pixelValue = false;
+    if (!pixelTest(image, row, col)) {
+      pixelValue = false;
+    } else {
+      pixelValue = image[row][col];
+    }
+    return pixelValue;
   }
   
   /**
@@ -82,30 +92,19 @@ public class Fingerprint {
    * @return An array containing each neighbours' value.
    */
   public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
-	  
 	  assert (image != null); // special case that is not expected (the image is supposed to have been checked earlier)
-
 	  // initiate a list that will contain the values of the neighbours
 	  boolean[] neighbours = new boolean[8];
-    // lists of coordinates of the pixel's neighbours relative to the pixel
-	  int[] neighbourRowDiff = {-1, -1, 0, 1, 1, 1, 0, -1};
-	  int[] neighbourColDiff = {0, 1, 1, 1, 0, -1, -1, -1};
-	  
-    // testing if the pixel we are analysing is in the image
-	  if (pixelTest(image, row, col)) {
-      // assessing the position and value of each neighbour (from 0 to 7)
-		  for (int i = 0; i < neighbours.length; i++) {
-			  int neighbourRow = row + neighbourRowDiff[i];
-			  int neighbourCol = col + neighbourColDiff[i];
-			  
-			  if (pixelTest(image, neighbourRow, neighbourCol) == true) {
-				  neighbours[i] = image[neighbourRow][neighbourCol];
-			  } else {
-				  neighbours[i] = false;
-			  }
-		  }
+    // lists of coordinates of the pixel's neighbours relative to the pixelfrom p0 to p7
+	  int[] neighbourRow = {row - 1, row - 1, row, row + 1, row + 1, row + 1, row, row - 1};
+	  int[] neighbourCol = {col, col + 1, col + 1, col + 1, col, col - 1, col - 1, col - 1};
+    // checking if the pixel we are analysing is in the image
+	  if (!pixelTest(image, row, col)) {
+      neighbours = null;
 	  } else {
-		  neighbours = null;
+      for (int i = 0; i < neighbours.length; i++) {
+        neighbours[i] = returnPixel(image, neighbourRow[i], neighbourCol[i]);
+		  }	  
 	  }
 	  return neighbours;
   }
@@ -120,15 +119,13 @@ public class Fingerprint {
    * @return the number of black neighbours.
    */
   public static int blackNeighbours(boolean[] neighbours) {
-
-	  int blackNeighbourscount = 0;
+	  int blackNeighboursCount = 0;
 	  for (int i = 0; i < neighbours.length; i++) {
 		  if (neighbours[i] == true) {
-			  blackNeighbourscount++;
+			  blackNeighboursCount++;
 		  }
 	  }
-	  return blackNeighbourscount;
-	 
+	  return blackNeighboursCount;	 
   }
   
   /**
@@ -141,7 +138,6 @@ public class Fingerprint {
    * @return the number of white to black transitions.
    */
   public static int transitions(boolean[] neighbours) {
-
 	  int nbTransitions = 0;
 
 	  for (int i = 0; i < neighbours.length - 1; i++) {
@@ -153,7 +149,6 @@ public class Fingerprint {
 		  nbTransitions++;
 	  }
 	  return nbTransitions;
-	  
   }
 
   /**
@@ -165,23 +160,21 @@ public class Fingerprint {
    *         otherwise.
    */
   public static boolean identical(boolean[][] image1, boolean[][] image2) {
-    
+    boolean match = true;
 	   if ((image1.length != image2.length) || (image1[0].length != image2[0].length)) {
-			  return false;
+			  match = false;
 		  }
-		  
 		  for (int row = 0; row < image1.length; row++) {
 			  for (int col = 0; col < image1[0].length; col++) {
 				  if (image1[row][col] != image2[row][col]) {
-					  return false;
+					  match = false;
 				  }  
 			  }
 		  }
-	  return true;
+	  return match;
   }
 
   public static boolean[][] copyImage(boolean[][] copiedImage) {
-
     int nbOfRows = copiedImage.length;
     int nbOfCols = copiedImage[0].length;
     boolean[][] pastedImage = new boolean[nbOfRows][nbOfCols];
@@ -202,19 +195,23 @@ public class Fingerprint {
    * @return A new array containing each pixel's value after the step.
    */
   public static boolean[][] thinningStep(boolean[][] image, int step) {
-	  
     int nbOfRows = image.length;
     int nbOfCols = image[0].length;
 
-    boolean[][] square = copyImage(image);
+    boolean[][] newImage = copyImage(image);
     
     for (int row = 0; row < nbOfRows; row++) {
       for (int col = 0; col < nbOfCols; col++) {
 
+        boolean[] neighbours = getNeighbours(image, row, col);
+
         boolean condition1 = image[row][col];
         boolean condition2 = true;
-        boolean[] neighbours = getNeighbours(image, row, col);
-// github test 
+        boolean condition3 = blackNeighbours(neighbours) >= 2 && blackNeighbours(neighbours) <= 6;
+        boolean condition4 = transitions(neighbours) == 1;
+        boolean condition5 = false;
+        boolean condition6 = false;
+
         if (neighbours == null) {
           condition2 = false;
         }
@@ -224,29 +221,19 @@ public class Fingerprint {
         boolean p4 = neighbours[4];
         boolean p6 = neighbours[6];
 
-        boolean condition3 = blackNeighbours(neighbours) >= 2 && blackNeighbours(neighbours) <= 6;
-        boolean condition4 = transitions(neighbours) == 1;
-        boolean condition5 = false;
-        boolean condition6 = false;
-
         if (step == 0) {
-
           condition5 = !p0 || !p2 || !p4;
           condition6 = !p2 || !p4 || !p6;
-        }
-        else if (step == 1) {
-
+        } else if (step == 1) {
           condition5 = !p0 || !p2 || !p6;
           condition6 = !p0 || !p4 || !p6;
         }
-
         if (condition1 && condition2 && condition3 && condition4 && condition5 && condition6) {
-          square[row][col] = false;
+          newImage[row][col] = false;
         }
-
       }
     }
-	  return square;
+	  return newImage;
   }
   
   /**
@@ -257,24 +244,23 @@ public class Fingerprint {
    *         applying the thinning algorithm.
    */
   public static boolean[][] thin(boolean[][] image) {
-	  
-    boolean pixelChanged = true;
-    boolean[][] tempImage0 = copyImage(image); 
-    boolean[][] tempImage1 = null;
-    boolean[][] tempImage2 = null;
+    
+    boolean[][] startImage = copyImage(image); 
+    boolean[][] intermediaryImage = null;
+    boolean[][] endImage = null;
+    boolean pixelChange = true;
 
-    while (pixelChanged) {
+    while (pixelChange) {
 
-      tempImage1 = thinningStep(tempImage0, 0);
-      tempImage2 = thinningStep(tempImage1, 1);
-
-      if (identical(tempImage0, tempImage2)) {
-        pixelChanged = false;
+      intermediaryImage = thinningStep(startImage, 0);
+      endImage = thinningStep(intermediaryImage, 1);
+      if (identical(startImage, endImage)) {
+        pixelChange = false; 
       } else {
-        tempImage0 = copyImage(tempImage2);
+        startImage = copyImage(endImage);
       }
     }
-	  return tempImage2;
+    return endImage;
   }
 
   /**
@@ -290,78 +276,98 @@ public class Fingerprint {
    *         <code>(row, col)</code>.
    */
   public static boolean[][] connectedPixels(boolean[][] image, int row, int col, int distance) {
-    
     if(distance < 0) {
-		  return null;
+	return null;
 	  }
-	  int squareLength = (2 * distance) + 1;
-	  boolean[][] square = new boolean[squareLength][squareLength];
-	  boolean[][] newImage = new boolean[image.length][image[0].length];
-    boolean[][] tempImage = new boolean[image.length][image[0].length];
+    boolean[][] newImage = new boolean[image.length][image[0].length];
+    newImage[row][col] = true;
+    boolean[][] tempImage = copyImage(newImage);
+    boolean pixelExist = true;
 	  
-	  boolean pixelExist = true;
-	  
-	  if(image[row][col] == false) {
-		 return null;
-    } else {
-      tempImage[row][col] = true;
-      newImage[row][col] = true;
-      
-      for (int rowGap = 0; rowGap < squareLength; rowGap++) {
-        for (int colGap = 0; colGap < squareLength; colGap++) {
-          int squarePixelRow = row - (squareLength / 2) + rowGap;
-          int squarePixelCol = col - (squareLength / 2) + colGap;
+    if(image[row][col] == false) {
+   	return null;
 
-          if (pixelTest(image, squarePixelRow, squarePixelCol)) {
-            square[rowGap][colGap] = image[squarePixelRow][squarePixelCol];
-          }
-        }
-      }
-
-    while(pixelExist){
-      
-      for(int squareRow = 0; squareRow < squareLength; squareRow++){
-        for(int squareCol = 0; squareCol < squareLength; squareCol ++){
-          if(pixelTest(image, squareRow, squareCol) && (image[squareRow][squareCol])){
-            boolean[] tempNeighbours = getNeighbours(newImage, squareRow, squareCol);
-            for(int tempNeighbourslength = 0; tempNeighbourslength < tempNeighbours.length; tempNeighbourslength++){
-              if(tempNeighbours[tempNeighbourslength]){
-                newImage[squareRow][squareCol] = true;
-              }
-            }
-            
-
-          }
-          
-        }
-      }
-      if(identical(newImage, tempImage)){
-        pixelExist = false;
-      }else{
-        for(int newImageRow = 0; newImageRow < newImage.length; newImageRow++){
-          for(int newImageCol = 0; newImageCol < newImage[newImageRow].length; newImageCol++){
-            tempImage[newImageRow][newImageCol] = newImage[newImageRow][newImageCol];
-          }
-        }
-      }
-    }
-      //for (int rowLength = 0; rowLength <= squareLength; rowLength++) {
-        //for (int colLength = 0; colLength <= squareLength; colLength++) {
-          //if (pixelTest(image, rowLength, colLength) && image[row][col]) {
-
-            //boolean[] tempNeighbours = getNeighbours(newImage, rowLength,colLength);
-            //for (int tempSize = 0; tempSize < tempNeighbours.length; tempSize++) {
-    
-              //if(tempNeighbours[tempSize]) {
-                //newImage[rowLength][colLength] = true;
-              //}
-            //}
-          //}
-        //}
-      //}
-    }
-      return newImage;
     } 
+    else {
+      while(pixelExist){
+      
+        for(int rowGap = row - distance; rowGap <= row + distance; rowGap++){
+          for(int colGap = col - distance; colGap <= col + distance; colGap ++){
+
+            if(pixelTest(image, rowGap, colGap) && (image[rowGap][colGap])){
+              boolean[] tempNeighbours = getNeighbours(newImage, rowGap, colGap);
+            
+                if(blackNeighbours(tempNeighbours) > 0){
+                 newImage[rowGap][colGap] = true;
+                }
+            }
+          }
+        }
+        if(identical(newImage, tempImage)){
+          pixelExist = false;
+
+        }else{
+          tempImage = copyImage(newImage);
+        }
+      }
+    }
+    return newImage;
+  } 
+
+  public static int countConnectedPixels(boolean[][] image) {
+    int nbOfRows = image.length;
+    int nbOfCols = image[0].length;
+    int nbOfBlackPixels = 0;
+
+    for (int row = 0; row < nbOfRows; row++) {
+      for (int col = 0; col < nbOfCols; col++) {
+        boolean currentPixel = returnPixel(image, row, col);
+        if (currentPixel) {
+          nbOfBlackPixels++;
+        }
+      }
+    }
+    return nbOfBlackPixels;
+  }
+
+  public static int[] connectedPixelsRows (boolean[][] image, int minutiaRow) {
+
+    int nbOfBlackPixels = countConnectedPixels(image);
+    int nbOfRows = image.length;
+    int nbOfCols = image[0].length;
+    int[] rows = new int[nbOfBlackPixels];
+    int i = 0;
+
+    for (int row = 0; row < nbOfRows; row++) {
+      for (int col = 0; col < nbOfCols; col++) {
+        boolean pixel = returnPixel(image, row, col);
+        if (pixel) {
+          rows[i] = minutiaRow - row;
+          i++;
+        }
+      }
+    }
+    return rows;
+  }
+
+  public static int[] connectedPixelsCols (boolean[][] image, int minutiaCol) {
+    int nbOfBlackPixels = countConnectedPixels(image);
+    int nbOfRows = image.length;
+    int nbOfCols = image[0].length;
+    int[] cols = new int[nbOfBlackPixels];
+    int i = 0;
+
+    for (int row = 0; row < nbOfRows; row++) {
+      for (int col = 0; col < nbOfCols; col++) {
+        boolean pixel = returnPixel(image, row, col);
+        if (pixel) {
+          cols[i] = col - minutiaCol;
+          i++;
+        }
+      }
+    }
+    return cols;
+  }
 
   /**
    * Computes the slope of a minutia using linear regression.
@@ -372,9 +378,34 @@ public class Fingerprint {
    * @param col             the col of the minutia.
    * @return the slope.
    */
-  public static double computeSlope(boolean[][] connectedPixels, int row, int col) {
-	  //TODO implement
-	  return 0;
+  public static double computeSlope(boolean[][] connectedPixels, int minutiaRow, int minutiaCol) {
+	  int nbOfBlackPixels = countConnectedPixels(connectedPixels);
+    int[] rows = connectedPixelsRows(connectedPixels, minutiaRow);
+    int[] cols = connectedPixelsCols(connectedPixels, minutiaCol);
+
+    double sumOfxy = 0;
+    double sumOfx2 = 0;
+    double sumOfy2 = 0;
+    double slope = 0;
+
+    for (int i = 0; i < nbOfBlackPixels; i++) {
+      int x = cols[i];
+      int y = rows[i];
+      sumOfxy += x*y;
+      sumOfx2 += x*x;
+      sumOfy2 += y*y;
+    }
+
+    if (sumOfx2 == 0) {
+      slope = Double.POSITIVE_INFINITY;
+
+    } else if (sumOfx2 >= sumOfy2) {
+      slope = sumOfxy / sumOfx2;
+
+    } else if (sumOfx2 < sumOfy2){
+      slope = sumOfy2 / sumOfxy;
+    }
+	  return slope;
   }
 
   /**
@@ -388,8 +419,8 @@ public class Fingerprint {
    *                        {@link #computeSlope(boolean[][], int, int)}.
    * @return the orientation of the minutia in radians.
    */
-  public static double computeAngle(boolean[][] connectedPixels, int row, int col, double slope) {
-	  //TODO implement
+  public static double computeAngle(boolean[][] connectedPixels, int minutiaRow, int minutiaCol, double slope) {
+	  
 	  return 0;
   }
 
