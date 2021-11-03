@@ -318,6 +318,61 @@ public class Fingerprint {
     return newImage;
   } 
 
+  public static int countConnectedPixels(boolean[][] image) {
+    int nbOfRows = image.length;
+    int nbOfCols = image[0].length;
+    int nbOfBlackPixels = 0;
+
+    for (int row = 0; row < nbOfRows; row++) {
+      for (int col = 0; col < nbOfCols; col++) {
+        boolean currentPixel = returnPixel(image, row, col);
+        if (currentPixel) {
+          nbOfBlackPixels++;
+        }
+      }
+    }
+    return nbOfBlackPixels;
+  }
+
+  public static int[] connectedPixelsRows (boolean[][] image, int minutiaRow) {
+
+    int nbOfBlackPixels = countConnectedPixels(image);
+    int nbOfRows = image.length;
+    int nbOfCols = image[0].length;
+    int[] rows = new int[nbOfBlackPixels];
+    int i = 0;
+
+    for (int row = 0; row < nbOfRows; row++) {
+      for (int col = 0; col < nbOfCols; col++) {
+        boolean pixel = returnPixel(image, row, col);
+        if (pixel) {
+          rows[i] = minutiaRow - row;
+          i++;
+        }
+      }
+    }
+    return rows;
+  }
+
+  public static int[] connectedPixelsCols (boolean[][] image, int minutiaCol) {
+    int nbOfBlackPixels = countConnectedPixels(image);
+    int nbOfRows = image.length;
+    int nbOfCols = image[0].length;
+    int[] cols = new int[nbOfBlackPixels];
+    int i = 0;
+
+    for (int row = 0; row < nbOfRows; row++) {
+      for (int col = 0; col < nbOfCols; col++) {
+        boolean pixel = returnPixel(image, row, col);
+        if (pixel) {
+          cols[i] = col - minutiaCol;
+          i++;
+        }
+      }
+    }
+    return cols;
+  }
+
   /**
    * Computes the slope of a minutia using linear regression.
    *
@@ -327,9 +382,34 @@ public class Fingerprint {
    * @param col             the col of the minutia.
    * @return the slope.
    */
-  public static double computeSlope(boolean[][] connectedPixels, int row, int col) {
-	  //TODO implement
-	  return 0;
+  public static double computeSlope(boolean[][] connectedPixels, int minutiaRow, int minutiaCol) {
+	  int nbOfBlackPixels = countConnectedPixels(connectedPixels);
+    int[] rows = connectedPixelsRows(connectedPixels, minutiaRow);
+    int[] cols = connectedPixelsCols(connectedPixels, minutiaCol);
+
+    double sumOfxy = 0;
+    double sumOfx2 = 0;
+    double sumOfy2 = 0;
+    double slope = 0;
+
+    for (int i = 0; i < nbOfBlackPixels; i++) {
+      int x = cols[i];
+      int y = rows[i];
+      sumOfxy += x*y;
+      sumOfx2 += x*x;
+      sumOfy2 += y*y;
+    }
+
+    if (sumOfx2 == 0) {
+      slope = Double.POSITIVE_INFINITY;
+
+    } else if (sumOfx2 >= sumOfy2) {
+      slope = sumOfxy / sumOfx2;
+
+    } else if (sumOfx2 < sumOfy2){
+      slope = sumOfy2 / sumOfxy;
+    }
+	  return slope;
   }
 
   /**
@@ -343,8 +423,8 @@ public class Fingerprint {
    *                        {@link #computeSlope(boolean[][], int, int)}.
    * @return the orientation of the minutia in radians.
    */
-  public static double computeAngle(boolean[][] connectedPixels, int row, int col, double slope) {
-	  //TODO implement
+  public static double computeAngle(boolean[][] connectedPixels, int minutiaRow, int minutiaCol, double slope) {
+	  
 	  return 0;
   }
 

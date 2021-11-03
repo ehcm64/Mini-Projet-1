@@ -21,12 +21,15 @@ public class Main {
 	//System.out.println("The provided tests are not complete. You have to write your own tests.");
     testGetNeighbours();
     testBlackNeighbours();
-    testTransitions();
-    testIdentical1();
-    testIdentical2();
-    testConnectedPixels1();
-    testConnectedPixels2();
-    testConnectedPixels3();
+    testCountConnectedPixels();
+    testConnectedPixelsRows();
+    testConnectedPixelsCols();
+    //testTransitions();
+    //testIdentical1();
+    //testIdentical2();
+    //testConnectedPixels1();
+    //testConnectedPixels2();
+    //testConnectedPixels3();
     //testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
@@ -226,6 +229,74 @@ public class Main {
       printArray(expected);
       System.out.print("Computed: ");
       printArray(connectedPixels);
+    }
+  }
+
+  public static void testCountConnectedPixels() {
+    System.out.print("testCountConnectedPixels: ");
+    boolean[][] image = {{true,  false, false, true,  true},
+                         {true,  false, true,  true,  false},
+                         {true,  true,  false, false, false},
+                         {false, true,  false, true,  false}};
+    int expected = 10;
+    if (Fingerprint.countConnectedPixels(image) == expected) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.println("Expected: 10");
+      System.out.println("Computed: " + Fingerprint.countConnectedPixels(image));
+
+    }
+  }
+
+  public static boolean identical(int[] array1, int[] array2) {
+    boolean match = true;
+	  if ((array1.length != array2.length)) {
+      match = false;
+    }
+    for (int i = 0; i < array1.length; i++) {
+      if (array1[i] != array2[i]) {
+        match = false;
+      }
+    }
+    return match;
+  }
+
+  public static void testConnectedPixelsRows() {
+    System.out.print("testConnectedPixelsRows: ");
+    boolean[][] image = {{true, false, false, true},
+                         {false, false, true, true},
+                         {false, true, true, false},
+                         {false, false, false, false}};
+    int[] computed = Fingerprint.connectedPixelsRows(image, 2);
+    int[] expected = {2, 2, 1, 1, 0, 0};
+    if (identical(computed, expected)) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.println("Expected: ");
+      printArray(expected);
+      System.out.println("Computed: ");
+      printArray(computed);
+    }
+  }
+
+  public static void testConnectedPixelsCols() {
+    System.out.print("testConnectedPixelsCols: ");
+    boolean[][] image = {{true, false, false, true},
+                         {false, false, true, true},
+                         {false, true, true, false},
+                         {false, false, false, false}};
+    int[] computed = Fingerprint.connectedPixelsCols(image, 1);
+    int[] expected = {-1, 2, 1, 2, 0, 1};
+    if (identical(computed, expected)) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.println("Expected: ");
+      printArray(expected);
+      System.out.println("Computed: ");
+      printArray(computed);
     }
   }
 
@@ -450,6 +521,15 @@ public class Main {
     for (boolean[] row : array) {
       for (boolean pixel : row) {
         System.out.print(pixel + ",");
+      }
+      System.out.println();
+    }
+  }
+
+  public static void printArray(int[][] array) {
+    for (int[] row : array) {
+      for (int value : row) {
+        System.out.print(value + ",");
       }
       System.out.println();
     }
