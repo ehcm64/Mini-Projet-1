@@ -316,25 +316,25 @@ public class Fingerprint {
   public static int countConnectedPixels(boolean[][] image) {
     int nbOfRows = image.length;
     int nbOfCols = image[0].length;
-    int nbOfBlackPixels = 0;
+    int nbOfConnectedPixels = 0;
 
     for (int row = 0; row < nbOfRows; row++) {
       for (int col = 0; col < nbOfCols; col++) {
         boolean currentPixel = returnPixel(image, row, col);
         if (currentPixel) {
-          nbOfBlackPixels++;
+          nbOfConnectedPixels++;
         }
       }
     }
-    return nbOfBlackPixels;
+    return nbOfConnectedPixels;
   }
 
   public static int[] connectedPixelsRows (boolean[][] image, int minutiaRow) {
 
-    int nbOfBlackPixels = countConnectedPixels(image);
+    int nbOfConnectedPixels = countConnectedPixels(image);
     int nbOfRows = image.length;
     int nbOfCols = image[0].length;
-    int[] rows = new int[nbOfBlackPixels];
+    int[] rows = new int[nbOfConnectedPixels];
     int i = 0;
 
     for (int row = 0; row < nbOfRows; row++) {
@@ -350,10 +350,10 @@ public class Fingerprint {
   }
 
   public static int[] connectedPixelsCols (boolean[][] image, int minutiaCol) {
-    int nbOfBlackPixels = countConnectedPixels(image);
+    int nbOfConnectedPixels = countConnectedPixels(image);
     int nbOfRows = image.length;
     int nbOfCols = image[0].length;
-    int[] cols = new int[nbOfBlackPixels];
+    int[] cols = new int[nbOfConnectedPixels];
     int i = 0;
 
     for (int row = 0; row < nbOfRows; row++) {
@@ -378,7 +378,7 @@ public class Fingerprint {
    * @return the slope.
    */
   public static double computeSlope(boolean[][] connectedPixels, int minutiaRow, int minutiaCol) {
-	  int nbOfBlackPixels = countConnectedPixels(connectedPixels);
+	  int nbOfConnectedPixels = countConnectedPixels(connectedPixels);
     int[] rows = connectedPixelsRows(connectedPixels, minutiaRow);
     int[] cols = connectedPixelsCols(connectedPixels, minutiaCol);
 
@@ -387,7 +387,7 @@ public class Fingerprint {
     double sumOfy2 = 0;
     double slope = 0;
 
-    for (int i = 0; i < nbOfBlackPixels; i++) {
+    for (int i = 0; i < nbOfConnectedPixels; i++) {
       int x = cols[i];
       int y = rows[i];
       sumOfxy += x*y;

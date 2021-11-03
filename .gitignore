@@ -21,7 +21,10 @@ skeleton_1_1_small.png
 skeleton_1_1.png
 skeleton_1_2.png
 skeleton_2_1.png
-
+minutiae_1_1.png
+minutiae_1_2.png
+minutiae_2_1.png
+minutiae_skeletonTest.png
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
