@@ -19,8 +19,11 @@ public class Main {
     //---------------------------
 	//System.out.println("Uncomment the function calls in Main.main to test your implementation.");
 	//System.out.println("The provided tests are not complete. You have to write your own tests.");
-    //testGetNeighbours();
-    //testBlackNeighbours();
+    testGetNeighbours();
+    testBlackNeighbours();
+    testCountConnectedPixels();
+    testConnectedPixelsRows();
+    testConnectedPixelsCols();
     //testTransitions();
     //testIdentical1();
     //testIdentical2();
@@ -101,29 +104,54 @@ public class Main {
   }
   
   public static void testBlackNeighbours() {
+    System.out.print("testBlackNeighbours: ");
 	  boolean[] neighbours = {false, true, true, false, false, false, true, false};
-	  System.out.println("Expected : 3");
-	  System.out.println("Computed : " + Fingerprint.blackNeighbours(neighbours));
+    if (Fingerprint.blackNeighbours(neighbours) == 3) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.println("Expected : 3");
+	    System.out.println("Computed : " + Fingerprint.blackNeighbours(neighbours));
+
+    }
   }
   
   public static void testTransitions() {
+    System.out.print("testTransitions: ");
 	  boolean[] neighbours = {false, true, true, false, false, false, true, false};
-	  System.out.println("Expected : 2");
-	  System.out.println("Computed : " + Fingerprint.transitions(neighbours));
+    if (Fingerprint.transitions(neighbours) == 2) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.println("Expected : 2");
+	    System.out.println("Computed : " + Fingerprint.transitions(neighbours));
+    }
   }
   
   public static void testIdentical1() {
+    System.out.print("testIdentical1: ");
 	  boolean[][] image1 = {{true, false, false}, {false, false, true}, {false, true, true}};
 	  boolean[][] image2 = {{true, false, false}, {false, false, true}, {false, true, true}};
-	  System.out.println("Expected : true");
-	  System.out.println("Computed : " + Fingerprint.identical(image1, image2));
+    if (Fingerprint.identical(image1, image2) == true) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.println("Expected : true");
+	    System.out.println("Computed : " + Fingerprint.identical(image1, image2));
+    }
   }
   
   public static void testIdentical2() {
+    System.out.print("testIdentical2: ");
 	  boolean[][] image1 = {{true, false, false}, {false, false, true}, {false, true, true}};
 	  boolean[][] image2 = {{true, false, true}, {false, true, true}, {false, false, true}};
-	  System.out.println("Expected : false");
-	  System.out.println("Computed : " + Fingerprint.identical(image1, image2));
+	  if (Fingerprint.identical(image1, image2) == false) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.println("Expected : false");
+	    System.out.println("Computed : " + Fingerprint.identical(image1, image2));
+    }
   }
 
   /**
@@ -201,6 +229,74 @@ public class Main {
       printArray(expected);
       System.out.print("Computed: ");
       printArray(connectedPixels);
+    }
+  }
+
+  public static void testCountConnectedPixels() {
+    System.out.print("testCountConnectedPixels: ");
+    boolean[][] image = {{true,  false, false, true,  true},
+                         {true,  false, true,  true,  false},
+                         {true,  true,  false, false, false},
+                         {false, true,  false, true,  false}};
+    int expected = 10;
+    if (Fingerprint.countConnectedPixels(image) == expected) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.println("Expected: 10");
+      System.out.println("Computed: " + Fingerprint.countConnectedPixels(image));
+
+    }
+  }
+
+  public static boolean identical(int[] array1, int[] array2) {
+    boolean match = true;
+	  if ((array1.length != array2.length)) {
+      match = false;
+    }
+    for (int i = 0; i < array1.length; i++) {
+      if (array1[i] != array2[i]) {
+        match = false;
+      }
+    }
+    return match;
+  }
+
+  public static void testConnectedPixelsRows() {
+    System.out.print("testConnectedPixelsRows: ");
+    boolean[][] image = {{true, false, false, true},
+                         {false, false, true, true},
+                         {false, true, true, false},
+                         {false, false, false, false}};
+    int[] computed = Fingerprint.connectedPixelsRows(image, 2);
+    int[] expected = {2, 2, 1, 1, 0, 0};
+    if (identical(computed, expected)) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.println("Expected: ");
+      printArray(expected);
+      System.out.println("Computed: ");
+      printArray(computed);
+    }
+  }
+
+  public static void testConnectedPixelsCols() {
+    System.out.print("testConnectedPixelsCols: ");
+    boolean[][] image = {{true, false, false, true},
+                         {false, false, true, true},
+                         {false, true, true, false},
+                         {false, false, false, false}};
+    int[] computed = Fingerprint.connectedPixelsCols(image, 1);
+    int[] expected = {-1, 2, 1, 2, 0, 1};
+    if (identical(computed, expected)) {
+      System.out.println("OK");
+    } else {
+      System.out.println("ERROR");
+      System.out.println("Expected: ");
+      printArray(expected);
+      System.out.println("Computed: ");
+      printArray(computed);
     }
   }
 
@@ -296,7 +392,7 @@ public class Main {
   }
 
   public static void testSkeleton(String input, String output) {
-
+    System.out.print("testSkeleton" + input + ": ");
     boolean[][] image1 = Helper.readBinary("resources/fingerprints/" + input + ".png");
 	  boolean[][] skeleton1 = Fingerprint.thin(image1);
     boolean[][] expected = Helper.readBinary("resources/test_outputs/" + output + ".png");
@@ -304,7 +400,7 @@ public class Main {
     if (Fingerprint.identical(expected, skeleton1)) {
       System.out.println("OK");
     } else {
-      System.out.println("ERREUR");
+      System.out.println("ERROR");
     }
   }
 
@@ -425,6 +521,15 @@ public class Main {
     for (boolean[] row : array) {
       for (boolean pixel : row) {
         System.out.print(pixel + ",");
+      }
+      System.out.println();
+    }
+  }
+
+  public static void printArray(int[][] array) {
+    for (int[] row : array) {
+      for (int value : row) {
+        System.out.print(value + ",");
       }
       System.out.println();
     }
