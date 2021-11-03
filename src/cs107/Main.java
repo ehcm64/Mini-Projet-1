@@ -27,9 +27,9 @@ public class Main {
     //testTransitions();
     //testIdentical1();
     //testIdentical2();
-    //testConnectedPixels1();
-    //testConnectedPixels2();
-    //testConnectedPixels3();
+    testConnectedPixels1();
+    testConnectedPixels2();
+    testConnectedPixels3();
     //testOrientation();
     //testApplyRotation();
     //testApplyTranslation();
