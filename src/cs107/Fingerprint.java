@@ -548,8 +548,24 @@ public class Fingerprint {
    * @return the minutia rotated around the given center.
    */
   public static int[] applyRotation(int[] minutia, int centerRow, int centerCol, int rotation) {
-	  //TODO implement
-	  return null;
+    int row = minutia[0];
+    int col = minutia[1];
+    int orientation = minutia[2];
+    int x = col - centerCol;
+    int y = centerRow - row;
+    double rotationInRad = Math.toRadians(rotation);
+    int newX = Math.toIntExact(Math.round(x * Math.cos(rotationInRad) - y * Math.sin(rotationInRad)));
+    int newY = Math.toIntExact(Math.round(x * Math.sin(rotationInRad) + y * Math.cos(rotationInRad)));
+    int newRow = Math.round(centerRow - newY);
+    int newCol = Math.round(newX + centerCol);
+    int newOrientation = Math.round(orientation + rotation);
+    
+    while(newOrientation > 360){
+      newOrientation -=360;
+    }
+	 
+    int[] afterRotation = {newRow,newCol, newOrientation};
+    return afterRotation;
   }
 
   /**
@@ -561,8 +577,15 @@ public class Fingerprint {
    * @return the translated minutia.
    */
   public static int[] applyTranslation(int[] minutia, int rowTranslation, int colTranslation) {
-	  //TODO implement
-	  return null;
+    int row = minutia[0];
+    int col = minutia[1];
+    int orientation = minutia[2];
+    int newRow = Math.round(row - rowTranslation);
+    int newCol = Math.round(col - colTranslation);
+    int newOrientation = orientation;
+
+    int[] afterTranslation = {newRow, newCol, newOrientation};
+    return afterTranslation;
   } 
   
   /**
