@@ -44,9 +44,9 @@ public class Main {
     testSkeleton("1_1", "skeleton_1_1");
     testSkeleton("1_2", "skeleton_1_2");
     testSkeleton("2_1", "skeleton_2_1");
-    //testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
-    //testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
-    //testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
+    testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
+    testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
+    testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
 	
     //---------------------------
     // Test overall functionality
