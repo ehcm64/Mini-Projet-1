@@ -422,7 +422,6 @@ public class Fingerprint {
 	  int nbOfConnectedPixels = countConnectedPixels(connectedPixels);
     int[] rows = connectedPixelsRows(connectedPixels, minutiaRow);
     int[] cols = connectedPixelsCols(connectedPixels, minutiaCol);
-    double inverseSlope = 0;
     int nbOfPixelsOverLine = 0;
     int nbOfPixelsUnderLine = 0;
     double arcTan = 0;
@@ -444,7 +443,7 @@ public class Fingerprint {
     }
 
     if (slope != Double.POSITIVE_INFINITY && slope != 0) {
-      inverseSlope = -(1 / slope);
+      double inverseSlope = -(1 / slope);
       arcTan = Math.atan(slope);
       
       for (int i = 0; i < nbOfConnectedPixels; i++) {
@@ -466,7 +465,7 @@ public class Fingerprint {
     }
     
     if (slope == Double.POSITIVE_INFINITY) {
-      inverseSlope = 0;
+      double inverseSlope = 0;
       for (int i = 0; i < nbOfConnectedPixels; i++) {
         double x = cols[i];
         double y = rows[i];
