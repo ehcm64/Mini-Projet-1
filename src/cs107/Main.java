@@ -33,8 +33,8 @@ public class Main {
     testOrientation1();
     testOrientation2();
     testOrientation3();
-    //testApplyRotation();
-    //testApplyTranslation();
+    testApplyRotation();
+    testApplyTranslation();
     testThin();
     testWithSkeleton();
     
