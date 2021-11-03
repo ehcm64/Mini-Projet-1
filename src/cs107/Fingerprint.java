@@ -645,7 +645,7 @@ public class Fingerprint {
       int maxOrientation) {
 
     int NbSameMinutiae = 0;
-	  for(int m1Count = 0; m1Count < minutiae1.size(); m1Count++ ){
+    for(int m1Count = 0; m1Count < minutiae1.size(); m1Count++ ){
       for(int m2Count = 0; m2Count < minutiae1.get(m1Count).length; m2Count++){
         int row1 = minutiae1.get(m1Count)[0];
         int col1 = minutiae1.get(m1Count)[1];
