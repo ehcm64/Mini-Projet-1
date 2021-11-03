@@ -24,9 +24,9 @@ public class Main {
     testCountConnectedPixels();
     testConnectedPixelsRows();
     testConnectedPixelsCols();
-    //testTransitions();
-    //testIdentical1();
-    //testIdentical2();
+    testTransitions();
+    testIdentical1();
+    testIdentical2();
     testConnectedPixels1();
     testConnectedPixels2();
     testConnectedPixels3();
@@ -36,11 +36,11 @@ public class Main {
     //testApplyRotation();
     //testApplyTranslation();
     //testThin();
-    //testWithSkeleton();
+    testWithSkeleton();
     
-    testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
-    testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
-    testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
+    //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
+    //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
+    //testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
     testSkeleton("1_1", "skeleton_1_1");
     testSkeleton("1_2", "skeleton_1_2");
     testSkeleton("2_1", "skeleton_2_1");
