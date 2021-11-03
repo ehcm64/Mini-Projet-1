@@ -641,7 +641,8 @@ public class Fingerprint {
    *                       minutiae to consider them as overlapping.
    * @return the number of overlapping minutiae.
    */
-  public static int matchingMinutiaeCount(List<int[]> minutiae1, List<int[]> minutiae2, int maxDistance, int maxOrientation) {
+  public static int matchingMinutiaeCount(List<int[]> minutiae1, List<int[]> minutiae2, int maxDistance,
+      int maxOrientation) {
 
     int NbSameMinutiae = 0;
 	  for(int m1Count = 0; m1Count < minutiae1.size(); m1Count++ ){
@@ -671,7 +672,25 @@ public class Fingerprint {
    *         otherwise.
    */
   public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
-	  //TODO implement
-	  return false;
+    boolean matching = false;
+    for(int nbMinutiae1 = 0; nbMinutiae1 < minutiae1.size(); nbMinutiae1++  ){
+      int centerRow = minutiae1.get(nbMinutiae1)[0];
+      int centerCol = minutiae1.get(nbMinutiae1)[1];
+      int rowTranslation = minutiae2.get(nbMinutiae1)[0] - minutiae1.get(nbMinutiae1)[0];
+      int colTranslation = minutiae2.get(nbMinutiae1)[1] - minutiae1.get(nbMinutiae1)[1];
+      int rotation = minutiae2.get(nbMinutiae1)[2] - minutiae1.get(nbMinutiae1)[2];
+
+      for( int oui = rotation - MATCH_ANGLE_OFFSET; oui < rotation + MATCH_ANGLE_OFFSET; oui++){
+        List<int[]> minutiae = applyTransformation(minutiae2, centerRow, centerCol, rowTranslation, colTranslation, oui);
+        if(matchingMinutiaeCount(minutiae1, minutiae, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD) > FOUND_THRESHOLD ){
+          matching = true;
+        }
+        
+      }
+      
+      
+    }
+    
+	  return matching;
   }
 }
