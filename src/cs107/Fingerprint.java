@@ -626,10 +626,7 @@ public class Fingerprint {
 	  for (int i = 0; i < nbOfMinutiae; i++) {
       int[] minutia = minutiae.get(i);
       int[] newMinutia = applyTransformation(minutia, centerRow, centerCol, rowTranslation, colTranslation, rotation);
-      int newRow = newMinutia[0];
-      int newCol = newMinutia[1];
-      int newOrientation = newMinutia[2];
-      minutiae.set(i, new int[] {newRow, newCol, newOrientation});
+      minutiae.set(i, new int[] {newMinutia[0], newMinutia[1], newMinutia[2]});
     }
 	  return minutiae;
   }
