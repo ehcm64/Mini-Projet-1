@@ -30,15 +30,17 @@ public class Main {
     testConnectedPixels1();
     testConnectedPixels2();
     testConnectedPixels3();
-    //testOrientation();
+    testOrientation1();
+    testOrientation2();
+    testOrientation3();
     //testApplyRotation();
     //testApplyTranslation();
     //testThin();
     //testWithSkeleton();
     
-    //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
-    //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
-    //testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
+    testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
+    testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
+    testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
     testSkeleton("1_1", "skeleton_1_1");
     testSkeleton("1_2", "skeleton_1_2");
     testSkeleton("2_1", "skeleton_2_1");
@@ -304,13 +306,31 @@ public class Main {
    * This function is here to help you test the functionalities of
    * computeOrientation. You are free to modify and/or delete it.
    */
-  public static void testOrientation() {
+  public static void testOrientation1() {
     boolean[][] image = {{true, false, false, true},
                          {false, false, true, true},
                          {false, true, true, false},
                          {false, false, false, false}};
     int angle = Fingerprint.computeOrientation(image, 2, 1, 3);
     System.out.println("Expected angle: 35\t Computed angle: " + angle);
+  }
+
+  public static void testOrientation2() {
+    boolean[][] image = {{false, true, false, false},
+                         {false, true, false, false},
+                         {false, true, false, false},
+                         {false, false, false, false}};
+    int angle = Fingerprint.computeOrientation(image, 0, 1, 3);
+    System.out.println("Expected angle: 270\t Computed angle: " + angle);
+  }
+
+  public static void testOrientation3() {
+    boolean[][] image = {{false, false, false, false},
+                         {false, false, false, false},
+                         {false, true, true, true},
+                         {false, false, false, false}};
+    int angle = Fingerprint.computeOrientation(image, 2, 1, 3);
+    System.out.println("Expected angle: 0\t Computed angle: " + angle);
   }
 
   /**

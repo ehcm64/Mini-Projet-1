@@ -287,8 +287,7 @@ public class Fingerprint {
     if(image[row][col] == false) {
    	return null;
 
-    } 
-    else {
+    } else {
       while(pixelExist){
       
         for(int rowGap = row - distance; rowGap <= row + distance; rowGap++){
@@ -306,7 +305,7 @@ public class Fingerprint {
         if(identical(newImage, tempImage)){
           pixelExist = false;
 
-        }else{
+        } else {
           tempImage = copyImage(newImage);
         }
       }
@@ -420,8 +419,71 @@ public class Fingerprint {
    * @return the orientation of the minutia in radians.
    */
   public static double computeAngle(boolean[][] connectedPixels, int minutiaRow, int minutiaCol, double slope) {
-	  
-	  return 0;
+	  int nbOfConnectedPixels = countConnectedPixels(connectedPixels);
+    int[] rows = connectedPixelsRows(connectedPixels, minutiaRow);
+    int[] cols = connectedPixelsCols(connectedPixels, minutiaCol);
+    double inverseSlope = 0;
+    int nbOfPixelsOverLine = 0;
+    int nbOfPixelsUnderLine = 0;
+    double arcTan = 0;
+
+    if (slope == 0) {
+      for (int i = 0; i < nbOfConnectedPixels; i++) {
+        if (cols[i] >= 0) {
+          nbOfPixelsOverLine++;
+        } else if (cols[i] < 0) {
+          nbOfPixelsUnderLine++;
+        }
+      }
+      boolean moreUnder = nbOfPixelsUnderLine > nbOfPixelsOverLine;
+      if (moreUnder) {
+        arcTan = Math.PI;
+      } else {
+        arcTan = 0;
+      }
+    }
+
+    if (slope != Double.POSITIVE_INFINITY && slope != 0) {
+      inverseSlope = -(1 / slope);
+      arcTan = Math.atan(slope);
+      
+      for (int i = 0; i < nbOfConnectedPixels; i++) {
+        double x = cols[i];
+        double y = rows[i];
+        if (y >= inverseSlope * x) {
+          nbOfPixelsOverLine++;
+        } else {
+          nbOfPixelsUnderLine++;
+        }
+      }
+      boolean moreOver = nbOfPixelsOverLine >= nbOfPixelsUnderLine;
+      boolean moreUnder = !moreOver;
+      boolean condition1 = arcTan > 0 && moreUnder;
+      boolean condition2 = arcTan < 0 && moreOver;
+      if (condition1 || condition2) {
+        arcTan += Math.PI;
+      }
+    }
+    
+    if (slope == Double.POSITIVE_INFINITY) {
+      inverseSlope = 0;
+      for (int i = 0; i < nbOfConnectedPixels; i++) {
+        double x = cols[i];
+        double y = rows[i];
+        if (y >= inverseSlope * x) {
+          nbOfPixelsOverLine++;
+        } else {
+          nbOfPixelsUnderLine++;
+        }
+      }
+      boolean moreOver = nbOfPixelsOverLine > nbOfPixelsUnderLine;
+      if (moreOver) {
+        arcTan = Math.PI / 2;
+      } else {
+        arcTan = -Math.PI / 2;
+      }
+    }
+    return arcTan;
   }
 
   /**
@@ -436,8 +498,14 @@ public class Fingerprint {
    * @return The orientation in degrees.
    */
   public static int computeOrientation(boolean[][] image, int row, int col, int distance) {
-	  //TODO implement
-	  return 0;
+	  boolean[][] connectedPixels = connectedPixels(image, row, col, distance);
+    double slope = computeSlope(connectedPixels, row, col);
+    double arcTan = computeAngle(connectedPixels, row, col, slope);
+    int angle = Math.toIntExact(Math.round(Math.toDegrees(arcTan)));
+    if (angle < 0) {
+      angle += 360;
+    }
+    return angle;
   }
 
   /**
