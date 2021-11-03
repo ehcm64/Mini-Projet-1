@@ -685,12 +685,8 @@ public class Fingerprint {
         if(matchingMinutiaeCount(minutiae1, minutiae, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD) > FOUND_THRESHOLD ){
           matching = true;
         }
-        
       }
-      
-      
     }
-    
 	  return matching;
   }
 }
