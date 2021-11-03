@@ -517,8 +517,8 @@ public class Fingerprint {
    * @see #thin(boolean[][])
    */
   public static List<int[]> extract(boolean[][] image) {
-    
-    ArrayList<int[]> minutiaList = new ArrayList<int[]>();
+
+	  ArrayList<int[]> minutiaList = new ArrayList<int[]>();
     
     int distance = ORIENTATION_DISTANCE;
 	  for(int extractRow = 1; extractRow < image.length - 1; extractRow++){
@@ -530,13 +530,14 @@ public class Fingerprint {
           if(transitions(neighboursExtract) == 1 || transitions(neighboursExtract) == 3){
             int angle = computeOrientation(image, extractRow, extractCol, distance);
             
-            minutiaList.add(new int[]) {extractRow, extractCol, angle});
+            minutiaList.add(new int[] {extractRow, extractCol, angle});
           }
         }
       }
     }
 	  return minutiaList;
   }
+
   /**
    * Applies the specified rotation to the minutia.
    *
