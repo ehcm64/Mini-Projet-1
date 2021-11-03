@@ -644,8 +644,8 @@ public class Fingerprint {
   public static int matchingMinutiaeCount(List<int[]> minutiae1, List<int[]> minutiae2, int maxDistance, int maxOrientation) {
 
     int NbSameMinutiae = 0;
-	  for(int m1Count = 0; m1Count < minutiae1.size(); m1Count++ ){
-      for(int m2Count = 0; m2Count < minutiae1.get(m1Count).length; m2Count++){
+    for(int m1Count = 0; m1Count < minutiae1.size(); m1Count++ ){
+      for(int m2Count = 0; m2Count < minutiae2.size(); m2Count++){
         int row1 = minutiae1.get(m1Count)[0];
         int col1 = minutiae1.get(m1Count)[1];
         int row2 = minutiae2.get(m2Count)[0];
@@ -671,7 +671,24 @@ public class Fingerprint {
    *         otherwise.
    */
   public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
-	  //TODO implement
-	  return false;
+    boolean matching = false;
+    if (minutiae1.size() == minutiae2.size()) {
+
+      for(int nbMinutiae1 = 0; nbMinutiae1 < minutiae1.size(); nbMinutiae1++  ){
+        int centerRow = minutiae1.get(nbMinutiae1)[0];
+        int centerCol = minutiae1.get(nbMinutiae1)[1];
+        int rowTranslation = minutiae2.get(nbMinutiae1)[0] - minutiae1.get(nbMinutiae1)[0];
+        int colTranslation = minutiae2.get(nbMinutiae1)[1] - minutiae1.get(nbMinutiae1)[1];
+        int rotation = minutiae2.get(nbMinutiae1)[2] - minutiae1.get(nbMinutiae1)[2];
+  
+        for( int oui = rotation - MATCH_ANGLE_OFFSET; oui < rotation + MATCH_ANGLE_OFFSET; oui++){
+          List<int[]> minutiae = applyTransformation(minutiae2, centerRow, centerCol, rowTranslation, colTranslation, oui);
+          if(matchingMinutiaeCount(minutiae1, minutiae, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD) > FOUND_THRESHOLD ){
+            matching = true;
+          }
+        }
+      }
+    }
+	  return matching;
   }
 }
