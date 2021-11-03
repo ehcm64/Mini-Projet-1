@@ -641,10 +641,25 @@ public class Fingerprint {
    *                       minutiae to consider them as overlapping.
    * @return the number of overlapping minutiae.
    */
-  public static int matchingMinutiaeCount(List<int[]> minutiae1, List<int[]> minutiae2, int maxDistance,
-      int maxOrientation) {
-	  //TODO implement
-	  return 0;
+  public static int matchingMinutiaeCount(List<int[]> minutiae1, List<int[]> minutiae2, int maxDistance, int maxOrientation) {
+
+    int NbSameMinutiae = 0;
+	  for(int m1Count = 0; m1Count < minutiae1.size(); m1Count++ ){
+      for(int m2Count = 0; m2Count < minutiae1.get(m1Count).length; m2Count++){
+        int row1 = minutiae1.get(m1Count)[0];
+        int col1 = minutiae1.get(m1Count)[1];
+        int row2 = minutiae2.get(m2Count)[0];
+        int col2 = minutiae2.get(m2Count)[1];
+        int angle1 = minutiae1.get(m1Count)[2];
+        int angle2 = minutiae2.get(m2Count)[2];
+        double euclidianDistance = Math.sqrt((row1-row2)*(row1-row2) + (col1-col2)*(col1-col2));
+        int angleDiff = angle1 - angle2;
+        if(euclidianDistance <= maxDistance && angleDiff <= maxOrientation){
+          NbSameMinutiae ++;
+        }
+      }
+    }
+	  return NbSameMinutiae;
   }
 
   /**
