@@ -671,7 +671,7 @@ public class Fingerprint {
    * @return Returns <code>true</code> if they match and <code>false</code>
    *         otherwise.
    */
-    public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
+  public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
     int nbMatchingMinutiae = 0;
     List<int[]> test = new ArrayList<int[]>();
 
