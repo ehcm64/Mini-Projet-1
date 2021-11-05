@@ -506,8 +506,7 @@ public class Fingerprint {
     }
     return angle;
   }
-
-  /**
+ /**
    * Extracts the minutiae from a thinned image.
    *
    * @param image array containing each pixel's boolean value.
@@ -535,6 +534,7 @@ public class Fingerprint {
         }
       }
     }
+    //System.out.println("nbminutia " + minutiaList.size());
 	  return minutiaList;
   }
 
@@ -622,13 +622,14 @@ public class Fingerprint {
   public static List<int[]> applyTransformation(List<int[]> minutiae, int centerRow, int centerCol, int rowTranslation,
       int colTranslation, int rotation) {
     
+    List <int[]> newMinutiae = new ArrayList<int[]>();
     int nbOfMinutiae = minutiae.size();
 	  for (int i = 0; i < nbOfMinutiae; i++) {
       int[] minutia = minutiae.get(i);
       int[] newMinutia = applyTransformation(minutia, centerRow, centerCol, rowTranslation, colTranslation, rotation);
-      minutiae.set(i, new int[] {newMinutia[0], newMinutia[1], newMinutia[2]});
+      newMinutiae.add(i, new int[] {newMinutia[0], newMinutia[1], newMinutia[2]});
     }
-	  return minutiae;
+	  return newMinutiae;
   }
   /**
    * Counts the number of overlapping minutiae.
@@ -641,12 +642,11 @@ public class Fingerprint {
    *                       minutiae to consider them as overlapping.
    * @return the number of overlapping minutiae.
    */
-  public static int matchingMinutiaeCount(List<int[]> minutiae1, List<int[]> minutiae2, int maxDistance,
-      int maxOrientation) {
+  public static int matchingMinutiaeCount(List<int[]> minutiae1, List<int[]> minutiae2, int maxDistance, int maxOrientation) {
 
     int NbSameMinutiae = 0;
     for(int m1Count = 0; m1Count < minutiae1.size(); m1Count++ ){
-      for(int m2Count = 0; m2Count < minutiae1.size(); m2Count++){
+      for(int m2Count = 0; m2Count < minutiae2.size(); m2Count++){
         int row1 = minutiae1.get(m1Count)[0];
         int col1 = minutiae1.get(m1Count)[1];
         int row2 = minutiae2.get(m2Count)[0];
@@ -654,8 +654,13 @@ public class Fingerprint {
         int angle1 = minutiae1.get(m1Count)[2];
         int angle2 = minutiae2.get(m2Count)[2];
         double euclidianDistance = Math.sqrt((row1-row2)*(row1-row2) + (col1-col2)*(col1-col2));
-        int angleDiff = angle1 - angle2;
-        if(euclidianDistance <= maxDistance && angleDiff <= maxOrientation){
+        int angleDiff = 0;
+        if (angle1 < angle2) {
+          angleDiff = angle2 - angle1;
+        } else {
+          angleDiff = angle1 - angle2;
+        }
+        if (euclidianDistance <= maxDistance && angleDiff <= maxOrientation){
           NbSameMinutiae ++;
         }
       }
@@ -687,7 +692,7 @@ public class Fingerprint {
             test = applyTransformation(minutiae2, centerRow, centerCol, rowTranslation, colTranslation, offset);
             nbMatchingMinutiae = matchingMinutiaeCount(minutiae1, test, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD);
             if (nbMatchingMinutiae >= FOUND_THRESHOLD) {
-              System.out.println(nbMatchingMinutiae);
+              //System.out.println(nbMatchingMinutiae);
               return true;
             }
           }
