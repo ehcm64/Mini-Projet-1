@@ -671,22 +671,30 @@ public class Fingerprint {
    * @return Returns <code>true</code> if they match and <code>false</code>
    *         otherwise.
    */
-  public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
-    boolean matching = false;
-    for(int nbMinutiae1 = 0; nbMinutiae1 < minutiae1.size(); nbMinutiae1++  ){
-      int centerRow = minutiae1.get(nbMinutiae1)[0];
-      int centerCol = minutiae1.get(nbMinutiae1)[1];
-      int rowTranslation = minutiae2.get(nbMinutiae1)[0] - minutiae1.get(nbMinutiae1)[0];
-      int colTranslation = minutiae2.get(nbMinutiae1)[1] - minutiae1.get(nbMinutiae1)[1];
-      int rotation = minutiae2.get(nbMinutiae1)[2] - minutiae1.get(nbMinutiae1)[2];
+    public static boolean match(List<int[]> minutiae1, List<int[]> minutiae2) {
+    int nbMatchingMinutiae = 0;
+    List<int[]> test = new ArrayList<int[]>();
 
-      for( int oui = rotation - MATCH_ANGLE_OFFSET; oui < rotation + MATCH_ANGLE_OFFSET; oui++){
-        List<int[]> minutiae = applyTransformation(minutiae2, centerRow, centerCol, rowTranslation, colTranslation, oui);
-        if(matchingMinutiaeCount(minutiae1, minutiae, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD) > FOUND_THRESHOLD ){
-          matching = true;
+      for (int i = 0; i < minutiae1.size(); i++) {
+        for (int j = 0; j < minutiae2.size(); j++) {
+          int centerRow = minutiae1.get(i)[0];
+          int centerCol = minutiae1.get(i)[1];
+          int rowTranslation = minutiae2.get(j)[0] - centerRow;
+          int colTranslation = minutiae2.get(j)[1] - centerCol;
+          int rotation = minutiae2.get(j)[2] - minutiae1.get(i)[2];
+
+          for (int offset = rotation - MATCH_ANGLE_OFFSET; offset <= rotation + MATCH_ANGLE_OFFSET; offset++) {
+            test = applyTransformation(minutiae2, centerRow, centerCol, rowTranslation, colTranslation, offset);
+            nbMatchingMinutiae = matchingMinutiaeCount(minutiae1, test, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD);
+            if (nbMatchingMinutiae >= FOUND_THRESHOLD) {
+              System.out.println(nbMatchingMinutiae);
+              return true;
+            }
+          }
         }
       }
-    }
-	  return matching;
+      
+      
+      return false;
   }
 }
