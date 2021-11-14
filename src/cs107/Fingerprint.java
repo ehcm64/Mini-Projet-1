@@ -266,7 +266,7 @@ public class Fingerprint {
 	  } else {
       while (pixelChange){
         for (int rowGap = row - distance; rowGap <= row + distance; rowGap++){
-          for (int colGap = col - distance; colGap <= col + distance; colGap++){
+          for (int colGap = col - distance; colGap <= col + distance; colGap++){  //"construction" of a square around the minutia to iterate over each pixel
             if (returnPixel(image, rowGap, colGap)) {
               boolean[] neighbours = getNeighbours(newImage, rowGap, colGap);
                 if (blackNeighbours(neighbours) > 0) {
@@ -292,55 +292,55 @@ public class Fingerprint {
    * @return the number of black pixels in the image.
    */
   /**
-   * Returns an array containing all connected pixels'
+   * Returns an arraylist containing all connected pixels'
    * rows, with the minutia as the coordinate origin.
    * 
    * @param connectedPixels the result of
    *                        {@link #connectedPixels(boolean[][], int, int, int)}.
    * @param minutiaRow      the row of the minutia.
-   * @return an array of vertical coordinates.
+   * @return an arraylist of vertical coordinates.
    */
   public static List<Integer> connectedPixelsRows (boolean[][] connectedPixels, int minutiaRow) {
     
     int nbOfRows = connectedPixels.length;
     int nbOfCols = connectedPixels[0].length;
-    List<Integer> rows = new ArrayList<Integer>();
+    List<Integer> rowList = new ArrayList<Integer>();
     
     for (int row = 0; row < nbOfRows; row++) {
       for (int col = 0; col < nbOfCols; col++) {
         if (returnPixel(connectedPixels, row, col)) {
-          rows.add(minutiaRow - row);
+          rowList.add(minutiaRow - row);
           
         }
       }
     }
-    return rows;
+    return rowList;
   }
 
   /**
-   * Returns an array containing all connected pixels'
+   * Returns an arraylist containing all connected pixels'
    * columns, with the minutia as the coordinate origin.
    * 
    * @param connectedPixels the result of
    *                        {@link #connectedPixels(boolean[][], int, int, int)}.
    * @param minutiaCol      the column of the minutia.
-   * @return an array of horizontal coordinates.
+   * @return an arraylist of horizontal coordinates.
    */
   public static List<Integer> connectedPixelsCols (boolean[][] image, int minutiaCol) {
     
     int nbOfRows = image.length;
     int nbOfCols = image[0].length;
-    List<Integer> cols = new ArrayList<Integer>();
+    List<Integer> colList = new ArrayList<Integer>();
     
     for (int row = 0; row < nbOfRows; row++) {
       for (int col = 0; col < nbOfCols; col++) {
         if (returnPixel(image, row, col)) {
-          cols.add(col - minutiaCol);
+          colList.add(col - minutiaCol);
           
         }
       }
     }
-    return cols;
+    return colList;
   }
 
   /**
@@ -354,15 +354,15 @@ public class Fingerprint {
    */
   public static double computeSlope(boolean[][] connectedPixels, int row, int col) {
 	  
-    List<Integer> rows = connectedPixelsRows(connectedPixels, row);
-    List<Integer> cols = connectedPixelsCols(connectedPixels, col);
+    List<Integer> rowList = connectedPixelsRows(connectedPixels, row);
+    List<Integer> colList = connectedPixelsCols(connectedPixels, col);
     double sumOfxy = 0;
     double sumOfx2 = 0;
     double sumOfy2 = 0;
     double slope = 0;
-    for (int i = 0; i < rows.size(); i++) {
-      int x = cols.get(i);
-      int y = rows.get(i);
+    for (int i = 0; i < rowList.size(); i++) {
+      int x = colList.get(i);
+      int y = rowList.get(i);
       sumOfxy += x*y;
       sumOfx2 += x*x;
       sumOfy2 += y*y;
@@ -383,8 +383,7 @@ public class Fingerprint {
    * Computes the number of pixels over the line perpendicular
    *  to the tangent in computeAngle.
    *
-   * @param nbOfConnectedPixels the result of
-   *                            {@link #countBlackPixels(boolean[][])}.
+   * @param nbOfConnectedPixels size of the lists that contains the columns/rows of connected black pixels
    * @param rows                the result of
    *                            {@link #connectedPixelsRows(boolean[][], int)}
    * @param cols                the result of
@@ -418,11 +417,12 @@ public class Fingerprint {
    */
   public static double computeAngle(boolean[][] connectedPixels, int row, int col, double slope) {
 	  
-    List<Integer> rows = connectedPixelsRows(connectedPixels, row);
+    List<Integer> rowList = connectedPixelsRows(connectedPixels, row);
+    int nbOfConnectedPixels = rowList.size();
     List<Integer> cols = connectedPixelsCols(connectedPixels, col);
     double arcTan = 0;
     if (slope == 0) {
-      for (int i = 0; i < rows.size(); i++) {
+      for (int i = 0; i < nbOfConnectedPixels; i++) {
         if (returnPixel(connectedPixels, row, col + 1)) {
           arcTan = 0;
         } else {
@@ -431,8 +431,8 @@ public class Fingerprint {
       }
     } else if (slope == Double.POSITIVE_INFINITY) {
       double inverseSlope = 0;
-      int nbOverLine = countPixelsOverLine(rows.size(), rows, cols, inverseSlope);
-      int nbUnderLine = rows.size() - nbOverLine;
+      int nbOverLine = countPixelsOverLine(nbOfConnectedPixels, rowList, cols, inverseSlope);
+      int nbUnderLine = nbOfConnectedPixels - nbOverLine;
       boolean moreOver = nbOverLine >= nbUnderLine;
       if (moreOver) {
         arcTan = Math.PI / 2;
@@ -442,8 +442,8 @@ public class Fingerprint {
     } else if (slope != Double.POSITIVE_INFINITY && slope != 0) {
       double inverseSlope = -(1 / slope);
       arcTan = Math.atan(slope);
-      int nbOverLine = countPixelsOverLine(rows.size(), rows, cols, inverseSlope);
-      int nbUnderLine = rows.size() - nbOverLine;
+      int nbOverLine = countPixelsOverLine(nbOfConnectedPixels, rowList, cols, inverseSlope);
+      int nbUnderLine = nbOfConnectedPixels - nbOverLine;
       boolean moreOver = nbOverLine > nbUnderLine;
       if (arcTan > 0 && !moreOver || arcTan < 0 && moreOver) {
         arcTan += Math.PI;
