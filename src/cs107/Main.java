@@ -19,40 +19,41 @@ public class Main {
     //---------------------------
 	//System.out.println("Uncomment the function calls in Main.main to test your implementation.");
 	//System.out.println("The provided tests are not complete. You have to write your own tests.");
-    testGetNeighbours();
-    testBlackNeighbours();
-    testCountConnectedPixels();
-    testConnectedPixelsRows();
-    testConnectedPixelsCols();
-    testTransitions();
-    testIdentical1();
-    testIdentical2();
-    testConnectedPixels1();
-    testConnectedPixels2();
-    testConnectedPixels3();
-    testOrientation1();
-    testOrientation2();
-    testOrientation3();
-    testApplyRotation();
-    testApplyTranslation();
-    testThin();
-    testWithSkeleton();
+    //testGetNeighbours();
+    //testBlackNeighbours();
+    //testCountBlackPixels();
+    //testConnectedPixelsRows();
+    //testConnectedPixelsCols();
+    //testTransitions();
+    //testIdentical1();
+    //testIdentical2();
+    //testSkeleton("1_1", "skeleton_1_1");
+    //testSkeleton("1_2", "skeleton_1_2");
+    //testSkeleton("2_1", "skeleton_2_1");
+    //testConnectedPixels1();
+    //testConnectedPixels2();
+    //testConnectedPixels3();
+    //testOrientation1();
+    //testOrientation2();
+    //testOrientation3();
+    //testOrientation4();
+    //testApplyRotation();
+    //testApplyTranslation();
+    //testThin();
+    //testWithSkeleton();
     
-    testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
-    testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
-    testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
-    testSkeleton("1_1", "skeleton_1_1");
-    testSkeleton("1_2", "skeleton_1_2");
-    testSkeleton("2_1", "skeleton_2_1");
-    testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
-    testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
-    testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
+    //testDrawSkeleton("1_1"); //draw skeleton of fingerprint 1_1.png
+    //testDrawSkeleton("1_2"); //draw skeleton of fingerprint 1_2.png
+    //testDrawSkeleton("2_1"); //draw skeleton of fingerprint 2_1.png
+    //testDrawMinutiae("1_1"); //draw minutiae of fingerprint 1_1.png
+    //testDrawMinutiae("1_2"); //draw minutiae of fingerprint 1_2.png
+    //testDrawMinutiae("2_1"); //draw minutiae of fingerprint 2_1.png
 	
     //---------------------------
     // Test overall functionality
     //---------------------------
 	//compare 1_1.png with 1_2.png: they are supposed to match
-    testCompareFingerprints("1_1", "1_2", true);  //expected match: true
+    //testCompareFingerprints("1_5", "2_3", false);  //expected match: true
     
     //compare 1_1.png with 2_1.png: they are not supposed to match
     //testCompareFingerprints("1_1", "2_1", false); //expected match: false
@@ -64,9 +65,9 @@ public class Main {
     //testCompareAllFingerprints("1_1", 2, false);
 
     //compare 1_1 with all images of finger 3 to 16
-    //for (int f = 3; f <= 16; f++) {
-      //testCompareAllFingerprints("1_1", f, false);
-    //}	
+    for (int f = 1; f <= 16; f++) {
+        testCompareAllFingerprints("1_1", f, false);
+    }	
   }
 
   /**
@@ -234,22 +235,7 @@ public class Main {
     }
   }
 
-  public static void testCountConnectedPixels() {
-    System.out.print("testCountConnectedPixels: ");
-    boolean[][] image = {{true,  false, false, true,  true},
-                         {true,  false, true,  true,  false},
-                         {true,  true,  false, false, false},
-                         {false, true,  false, true,  false}};
-    int expected = 10;
-    if (Fingerprint.countConnectedPixels(image) == expected) {
-      System.out.println("OK");
-    } else {
-      System.out.println("ERROR");
-      System.out.println("Expected: 10");
-      System.out.println("Computed: " + Fingerprint.countConnectedPixels(image));
-
-    }
-  }
+ 
 
   public static boolean identical(int[] array1, int[] array2) {
     boolean match = true;
@@ -264,43 +250,9 @@ public class Main {
     return match;
   }
 
-  public static void testConnectedPixelsRows() {
-    System.out.print("testConnectedPixelsRows: ");
-    boolean[][] image = {{true, false, false, true},
-                         {false, false, true, true},
-                         {false, true, true, false},
-                         {false, false, false, false}};
-    int[] computed = Fingerprint.connectedPixelsRows(image, 2);
-    int[] expected = {2, 2, 1, 1, 0, 0};
-    if (identical(computed, expected)) {
-      System.out.println("OK");
-    } else {
-      System.out.println("ERROR");
-      System.out.println("Expected: ");
-      printArray(expected);
-      System.out.println("Computed: ");
-      printArray(computed);
-    }
-  }
+  
 
-  public static void testConnectedPixelsCols() {
-    System.out.print("testConnectedPixelsCols: ");
-    boolean[][] image = {{true, false, false, true},
-                         {false, false, true, true},
-                         {false, true, true, false},
-                         {false, false, false, false}};
-    int[] computed = Fingerprint.connectedPixelsCols(image, 1);
-    int[] expected = {-1, 2, 1, 2, 0, 1};
-    if (identical(computed, expected)) {
-      System.out.println("OK");
-    } else {
-      System.out.println("ERROR");
-      System.out.println("Expected: ");
-      printArray(expected);
-      System.out.println("Computed: ");
-      printArray(computed);
-    }
-  }
+
 
   /**
    * This function is here to help you test the functionalities of
@@ -320,7 +272,7 @@ public class Main {
                          {false, true, false, false},
                          {false, true, false, false},
                          {false, false, false, false}};
-    int angle = Fingerprint.computeOrientation(image, 0, 1, 3);
+    int angle = Fingerprint.computeOrientation(image, 2, 1, 3);
     System.out.println("Expected angle: 270\t Computed angle: " + angle);
   }
 
@@ -329,7 +281,17 @@ public class Main {
                          {false, false, false, false},
                          {false, true, true, true},
                          {false, false, false, false}};
-    int angle = Fingerprint.computeOrientation(image, 2, 1, 3);
+    int angle = Fingerprint.computeOrientation(image, 2, 3, 3);
+    System.out.println("Expected angle: 180\t Computed angle: " + angle);
+  }
+
+  public static void testOrientation4() {
+    boolean[][] image = {{true, false, false, false, true},
+                         {false, true, false, true, false},
+                         {false, false, true, false, false},
+                         {false, true, false, true, false},
+                         {true, false, false, false, true}};
+    int angle = Fingerprint.computeOrientation(image, 2, 2, 4);
     System.out.println("Expected angle: 0\t Computed angle: " + angle);
   }
 
