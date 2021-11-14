@@ -647,17 +647,18 @@ public class Fingerprint {
           int rowTranslation = minutiae2.get(j)[0] - centerRow;
           int colTranslation = minutiae2.get(j)[1] - centerCol;
           int rotation = minutiae2.get(j)[2] - minutiae1.get(i)[2];
+		
           for (int offset = rotation - MATCH_ANGLE_OFFSET; offset <= rotation + MATCH_ANGLE_OFFSET; offset++) { //Loop through each angle offset
             transfomerdMinutiae = applyTransformation(minutiae2, centerRow, centerCol, rowTranslation, colTranslation, offset);
             nbMatchingMinutiae = matchingMinutiaeCount(minutiae1, transfomerdMinutiae, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD); 
             if (nbMatchingMinutiae >= FOUND_THRESHOLD) { //Check if the number of matching minutiae is great enough for the two fingerprints to match
-              System.out.print(nbMatchingMinutiae+ " ");
+              
               return true;
             }
           }
         }
       }
-      System.out.print(nbMatchingMinutiae + " ");
+      
       return false;
   }
 }
