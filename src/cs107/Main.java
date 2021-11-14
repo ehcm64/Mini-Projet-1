@@ -234,26 +234,7 @@ public class Main {
       printArray(connectedPixels);
     }
   }
-
- 
-
-  public static boolean identical(int[] array1, int[] array2) {
-    boolean match = true;
-	  if ((array1.length != array2.length)) {
-      match = false;
-    }
-    for (int i = 0; i < array1.length; i++) {
-      if (array1[i] != array2[i]) {
-        match = false;
-      }
-    }
-    return match;
-  }
-
   
-
-
-
   /**
    * This function is here to help you test the functionalities of
    * computeOrientation. You are free to modify and/or delete it.

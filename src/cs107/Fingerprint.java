@@ -85,8 +85,8 @@ public class Fingerprint {
   public static boolean[] getNeighbours(boolean[][] image, int row, int col) {
 	  assert (image != null); // special case that is not expected (the image is supposed to have been checked earlier)
 	  boolean[] neighbours = new boolean[8]; 
-	  int[] neighbourRow = {row - 1, row - 1, row, row + 1, row + 1, row + 1, row, row - 1}; // lists of coordinates of the pixel's neighbours 
-	  int[] neighbourCol = {col, col + 1, col + 1, col + 1, col, col - 1, col - 1, col - 1}; // relative to the pixel
+	  int[] neighbourRow = {row - 1, row - 1, row, row + 1, row + 1, row + 1, row, row - 1}; // CCoordinates of the pixel's neighbours 
+	  int[] neighbourCol = {col, col + 1, col + 1, col + 1, col, col - 1, col - 1, col - 1}; // relative to itself
 	  if (row < 0 || row >= image.length || col < 0 || col >= image[0].length) {
       return null;
 	  } else {
@@ -128,7 +128,7 @@ public class Fingerprint {
   public static int transitions(boolean[] neighbours) {
 	  int nbTransitions = 0;
 	  for (int i = 0; i < neighbours.length - 1; i++) {
-		  if (!neighbours[i] && neighbours[i+1]) { //Transition if the pixel is white and if the next one is black
+		  if (!neighbours[i] && neighbours[i+1]) { 
 			  nbTransitions++;
 		  }
 	  }
@@ -301,16 +301,13 @@ public class Fingerprint {
    * @return an arraylist of vertical coordinates.
    */
   public static List<Integer> connectedPixelsRows (boolean[][] connectedPixels, int minutiaRow) {
-    
     int nbOfRows = connectedPixels.length;
     int nbOfCols = connectedPixels[0].length;
     List<Integer> rowList = new ArrayList<Integer>();
-    
     for (int row = 0; row < nbOfRows; row++) {
       for (int col = 0; col < nbOfCols; col++) {
         if (returnPixel(connectedPixels, row, col)) {
           rowList.add(minutiaRow - row);
-          
         }
       }
     }
@@ -327,16 +324,13 @@ public class Fingerprint {
    * @return an arraylist of horizontal coordinates.
    */
   public static List<Integer> connectedPixelsCols (boolean[][] image, int minutiaCol) {
-    
     int nbOfRows = image.length;
     int nbOfCols = image[0].length;
     List<Integer> colList = new ArrayList<Integer>();
-    
     for (int row = 0; row < nbOfRows; row++) {
       for (int col = 0; col < nbOfCols; col++) {
         if (returnPixel(image, row, col)) {
           colList.add(col - minutiaCol);
-          
         }
       }
     }
@@ -639,7 +633,7 @@ public class Fingerprint {
    */
   public static boolean  match(List<int[]> minutiae1, List<int[]> minutiae2) {
     int nbMatchingMinutiae = 0;
-    List<int[]> transfomerdMinutiae = new ArrayList<int[]>();
+    List<int[]> transformedMinutiae = new ArrayList<int[]>();
       for (int i = 0; i < minutiae1.size(); i++) { //Loop through all minutiae in List1
         for (int j = 0; j < minutiae2.size(); j++) { //Loop through all minutiae in List2
           int centerRow = minutiae1.get(i)[0];
@@ -647,18 +641,15 @@ public class Fingerprint {
           int rowTranslation = minutiae2.get(j)[0] - centerRow;
           int colTranslation = minutiae2.get(j)[1] - centerCol;
           int rotation = minutiae2.get(j)[2] - minutiae1.get(i)[2];
-		
           for (int offset = rotation - MATCH_ANGLE_OFFSET; offset <= rotation + MATCH_ANGLE_OFFSET; offset++) { //Loop through each angle offset
-            transfomerdMinutiae = applyTransformation(minutiae2, centerRow, centerCol, rowTranslation, colTranslation, offset);
-            nbMatchingMinutiae = matchingMinutiaeCount(minutiae1, transfomerdMinutiae, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD); 
+            transformedMinutiae = applyTransformation(minutiae2, centerRow, centerCol, rowTranslation, colTranslation, offset);
+            nbMatchingMinutiae = matchingMinutiaeCount(minutiae1, transformedMinutiae, DISTANCE_THRESHOLD, ORIENTATION_THRESHOLD); 
             if (nbMatchingMinutiae >= FOUND_THRESHOLD) { //Check if the number of matching minutiae is great enough for the two fingerprints to match
-              
               return true;
             }
           }
         }
       }
-      
       return false;
   }
 }
