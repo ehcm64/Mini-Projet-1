@@ -45,7 +45,7 @@ public class Fingerprint {
    * @param col   the column of the pixel of interest.
    * @return <code>true</code> or <code>false</code> depending on the pixel's value and location.
    */
-  public static boolean returnPixel(boolean[][] image, int row, int col) {
+  private static boolean returnPixel(boolean[][] image, int row, int col) {
     assert (image != null);
     if (row < 0 || row >= image.length || col < 0 || col >= image[0].length) {
       return false;
@@ -165,7 +165,7 @@ public class Fingerprint {
    * @param copiedImage array containing each pixel's boolean value.
    * @return an array identical to the image to copy.
    */
-  public static boolean[][] copyImage(boolean[][] copiedImage) {
+  private static boolean[][] copyImage(boolean[][] copiedImage) {
     int nbOfRows = copiedImage.length;
     int nbOfCols = copiedImage[0].length;
     boolean[][] pastedImage = new boolean[nbOfRows][nbOfCols];
@@ -300,7 +300,7 @@ public class Fingerprint {
    * @param minutiaRow      the row of the minutia.
    * @return an arraylist of vertical coordinates.
    */
-  public static List<Integer> connectedPixelsRows (boolean[][] connectedPixels, int minutiaRow) {
+  private static List<Integer> connectedPixelsRows (boolean[][] connectedPixels, int minutiaRow) {
     int nbOfRows = connectedPixels.length;
     int nbOfCols = connectedPixels[0].length;
     List<Integer> rowList = new ArrayList<Integer>();
@@ -323,7 +323,7 @@ public class Fingerprint {
    * @param minutiaCol      the column of the minutia.
    * @return an arraylist of horizontal coordinates.
    */
-  public static List<Integer> connectedPixelsCols (boolean[][] image, int minutiaCol) {
+  private static List<Integer> connectedPixelsCols (boolean[][] image, int minutiaCol) {
     int nbOfRows = image.length;
     int nbOfCols = image[0].length;
     List<Integer> colList = new ArrayList<Integer>();
@@ -447,12 +447,12 @@ public class Fingerprint {
   }
 
   /**
-   * Returns a given angle's mod [360] value.
+   * Returns a given angle's positive mod [360] value.
    * 
    * @param angle the angle's value in degrees to modify.
    * @return the angle with a value between 0 and 359.
    */
-  public static int returnTrueAngle(int angle) {
+  private static int returnTrueAngle(int angle) {
     while (angle > 359){
       angle -=360;
     } 

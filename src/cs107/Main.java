@@ -17,8 +17,8 @@ public class Main {
     //---------------------------
     // Tests functions separately
     //---------------------------
-	//System.out.println("Uncomment the function calls in Main.main to test your implementation.");
-	//System.out.println("The provided tests are not complete. You have to write your own tests.");
+	  //System.out.println("Uncomment the function calls in Main.main to test your implementation.");
+	  //System.out.println("The provided tests are not complete. You have to write your own tests.");
     //testGetNeighbours();
     //testBlackNeighbours();
     //testCountBlackPixels();
@@ -65,7 +65,7 @@ public class Main {
     //testCompareAllFingerprints("1_1", 2, false);
 
     //compare 1_1 with all images of finger 3 to 16
-    for (int f = 1; f <= 16; f++) {
+    for (int f = 2; f <= 16; f++) {
         testCompareAllFingerprints("1_1", f, false);
     }	
   }
