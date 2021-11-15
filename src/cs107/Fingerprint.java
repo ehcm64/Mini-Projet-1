@@ -284,13 +284,7 @@ public class Fingerprint {
       }
     return newImage;
   }
-
-  /**
-   * Computes the number of black pixels in an image.
-   *
-   * @param image array containing each pixel's boolean value.
-   * @return the number of black pixels in the image.
-   */
+  
   /**
    * Returns an arraylist containing all connected pixels'
    * rows, with the minutia as the coordinate origin.
